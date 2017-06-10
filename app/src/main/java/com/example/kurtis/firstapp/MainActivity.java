@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
                 "<html>" +
                 "<head>" +
                 "<meta charset=\"UTF-8\">" +
+                "<link rel=\"stylesheet\" type=\"text/css\" href=VexSource/vexQuestions.css\".css\"" +
                 "</head>" +
                 "<body>" +
                 "<canvas id=\"boo\" width=\"200\" height=\"100\"></canvas>" +

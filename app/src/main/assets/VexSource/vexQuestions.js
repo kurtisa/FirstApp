@@ -1,6 +1,6 @@
 
-var randnum=null;
-randnum = Android.getFromAndroid();
+//var randnum=null;
+//randnum = Android.getFromAndroid();
 
 
 VF = Vex.Flow;
@@ -11,7 +11,7 @@ var renderer = new Vex.Flow.Renderer(document.getElementById("boo"),
                                      Vex.Flow.Renderer.Backends.CANVAS);
 
 // Configure the rendering context.
-renderer.resize(500, 500);
+renderer.resize(900, 900);
 var context = renderer.getContext();
 context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
 
