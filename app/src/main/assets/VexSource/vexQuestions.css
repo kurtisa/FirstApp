@@ -1,6 +1,6 @@
-<style>
-.boo {
-transform: scale(2, 2);
-}
-
-</style>
+#container {
+   position:absolute;
+     left:50%;
+     transform: translateX(-50%);
+     -webkit-transform: translateX(-50%);
+   }

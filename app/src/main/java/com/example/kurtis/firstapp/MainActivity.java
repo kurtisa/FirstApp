@@ -1,37 +1,45 @@
 package com.example.kurtis.firstapp;
 
+import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.webkit.WebChromeClient;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.webkit.WebSettings;
+import android.widget.Button;
 
-import java.util.Random;
+import java.text.CollationElementIterator;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public class MainActivity extends AppCompatActivity {
 
+    public  Button button1;
+    public  Button button2;
+    public  Button button3;
 
 
     private WebView wv1;
+    Context context;
+
+
 
 
     protected void onCreate(Bundle savedInstanceState) {
-        int noteRange=8;
-        final Random randnum = new Random(noteRange);
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        button1 = (Button) findViewById(R.id.button1);
+        button2 = (Button) findViewById(R.id.button2);
+        button3 = (Button) findViewById(R.id.button3);
+
+        setContentView(R.layout.activity_main);
         wv1 = (WebView) findViewById(R.id.webview_main);
+        //wv1.addJavascriptInterface(new WebAppInterface(context),"MainActivityInterface");
+        wv1.addJavascriptInterface(new android(context), "android");
 
 
 
@@ -41,11 +49,14 @@ public class MainActivity extends AppCompatActivity {
                 "<html>" +
                 "<head>" +
                 "<meta charset=\"UTF-8\">" +
-                "<link rel=\"stylesheet\" type=\"text/css\" href=VexSource/vexQuestions.css\".css\"" +
+                "<link rel=\"stylesheet\" type=\"text/css\" href=\"VexSource/vexQuestions.css\".css\"" +
                 "</head>" +
                 "<body>" +
-                "<canvas id=\"boo\" width=\"200\" height=\"100\"></canvas>" +
-
+                "<div id=question>" +
+                "</div>" +
+                "<canvas id=\"container\" width=\"200\" height=\"100\"></canvas>" +
+                "<script src=\"jquery-3.2.1.slim.js\"> </script>" +
+                "<script src=\"raphael.min.js\"> </script>" +
                 "<script src=\"vexflow-master/releases/vexflow-min.js\"> </script>" +
                 "<script type = text/javascript src = \"VexSource/vexQuestions.js\">" +
                 "</script>" +
@@ -53,28 +64,17 @@ public class MainActivity extends AppCompatActivity {
                 "</html>";
 
 
+        //enable jse
 
-        //enable js
+        wv1.getSettings().setDomStorageEnabled(true);
+        wv1.getSettings().setJavaScriptEnabled(true);
 
-        WebSettings webSettings = wv1.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setDomStorageEnabled(true);
 
         //wv1.loadUrl("http://beta.html5test.com/");
 
         wv1.loadDataWithBaseURL("file:///android_asset/", VexQuestions, "text/html", "UTF-8", null);
-
     }
 
-//    public class JavaScriptInterface {
-//        JavaScriptInterface(Context c) {
-//            mContext = c;
-//        }
-//        @JavascriptInterface
-//        public String getFromAndroid() {
-//            return randnum;
-//        }
-//    }
 
 
 
@@ -97,4 +97,10 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
+
+
 }
+
