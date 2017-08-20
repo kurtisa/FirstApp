@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "983352937500",
+    "firebase_url": "https://music-theory-app.firebaseio.com",
+    "project_id": "music-theory-app",
+    "storage_bucket": "music-theory-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:983352937500:android:6b1c75c7314e6fa6",
+        "android_client_info": {
+          "package_name": "com.example.kurtis.firstapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "983352937500-e6pohdr63034bk7qk9efiv1op9mdeq7n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.kurtis.firstapp",
+            "certificate_hash": "f896110ec3f4bc77f067ea1c3d6f998dd05c26a4"
+          }
+        },
+        {
+          "client_id": "983352937500-j3rojk7ncajjg8gmbj50en5quuuhmfff.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.kurtis.firstapp",
+            "certificate_hash": "41e128ce11bc972e72061fdc0ab8641ca69aa41c"
+          }
+        },
+        {
+          "client_id": "983352937500-n9f41ucbplk5bsd1q122qd0kesgujksg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9UgnD88OGRUqb3s3YHCg4oeSj8zyyn8E"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "983352937500-n9f41ucbplk5bsd1q122qd0kesgujksg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

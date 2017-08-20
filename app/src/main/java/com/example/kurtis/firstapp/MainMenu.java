@@ -1,5 +1,5 @@
 package com.example.kurtis.firstapp;
-
+//THIS CODE CURRENTLY IS NOT IMPLEMENTED AT ALL.
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -18,7 +18,7 @@ import android.widget.ImageButton;
 
 public class MainMenu extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+        private Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,14 +26,14 @@ public class MainMenu extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+      /*  FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -43,6 +43,7 @@ public class MainMenu extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
 
         ImageButton startButton = (ImageButton)findViewById(R.id.startButton);
 
@@ -96,14 +97,22 @@ public class MainMenu extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
+        if (id == R.id.lvl1) {
+            intent = new Intent(this, MainActivity.class);
+            intent.putExtra("LEVEL", "1");
+            startActivity(intent);
+        } else if (id == R.id.lvl2) {
+            intent = new Intent(this, MainActivity.class);
+            intent.putExtra("LEVEL", "2");
+            startActivity(intent);
+        } else if (id == R.id.lvl3) {
+            intent = new Intent(this, MainActivity.class);
+            intent.putExtra("LEVEL", "3");
+            startActivity(intent);
+        } else if (id == R.id.lvl4) {
+            intent = new Intent(this, MainActivity.class);
+            intent.putExtra("LEVEL", "4");
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

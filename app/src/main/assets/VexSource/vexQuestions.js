@@ -1,8 +1,35 @@
 VF = Vex.Flow;
+
+// calculate correct note
+
+var level
+level = android.javaScriptGetLevel();
+if (level == '1'){
+min = Math.ceil(0);
+max = Math.floor(4);
+} else if (level == '2'){
+min = Math.ceil(0);
+max = Math.floor(3);
+} else{
 min = Math.ceil(0);
 max = Math.floor(11);
+}
 var correctNoteNumber = Math.floor(Math.random() * (max - min + 1)) + min;
 
+
+//determine which clef to display
+
+var isTreble
+isTreble = android.javaScriptGetClef();
+var stringClef;
+
+if (isTreble){
+    stringClef = "treble";
+
+} else{
+
+    stringClef = "bass";
+}
 
 
 var canvas = $("#container")[0];
@@ -10,11 +37,14 @@ var canvas = $("#container")[0];
     Vex.Flow.Renderer.Backends.CANVAS);
 
   var ctx = renderer.getContext();
-  var stave = new Vex.Flow.Stave(45, 0, 75);
-  stave.addClef("treble").setContext(ctx).draw();
+  var stave = new Vex.Flow.Stave(60, 0, 75);
+  //renderer.resize(200, 100);
+  stave.addClef(stringClef).setContext(ctx).draw();
 
 var noteLetter;
 var accidental;
+
+if (level == '3'){
   switch (correctNoteNumber){
   	case 0: noteLetter = "A";
     				break;
@@ -41,13 +71,59 @@ var accidental;
   	case 11: noteLetter = "Ab";
         				break;
   	}
+}
+var pitch;
+if (level == '1'){
+  switch (correctNoteNumber){
+  	case 0: noteLetter = "E";
+  	pitch = "/4";
+    				break;
+  	case 1: noteLetter = "G";
+  	pitch = "/4";
+    				break;
+  	case 2: noteLetter = "B";
+  	pitch = "/4";
+    				break;
+  	case 3:	noteLetter = "D";
+  	pitch = "/5";
+    				break;
+  	case 4:	noteLetter = "F";
+  	pitch = "/5";
+        				break;
+  	}
+} else if (level == '2'){
+         switch (correctNoteNumber){
+         	case 0: noteLetter = "F";
+         	pitch = "/4";
+           				break;
+         	case 1: noteLetter = "A";
+         	pitch = "/4";
+           				break;
+         	case 2: noteLetter = "C";
+         	pitch = "/5";
+           				break;
+         	case 3:	noteLetter = "E";
+         	pitch = "/5";
+           				break;
+         	}
+       }
 
-  var notes = [
+    android.updateJavascriptNote(noteLetter);
+
+    var notes;
     // A quarter-note C.
-    new Vex.Flow.StaveNote({ keys: [noteLetter+"/4"], duration: "q" }),
 
+    if (noteLetter.length == 2){
+    notes = [
+    new Vex.Flow.StaveNote({clef: stringClef, keys: [noteLetter+pitch], duration: "q" }).
+    addAccidental(0, new VF.Accidental(noteLetter.charAt(1))),
+    ];
+    } else {
+        notes = [
+    new Vex.Flow.StaveNote({clef: stringClef, keys: [noteLetter+pitch], duration: "q" }),
+    ];
+    }
 
-  ];
 
 
   // Create a voice in 1/4
@@ -66,7 +142,5 @@ var accidental;
 
   // Render voice
   voice.draw(ctx, stave);
-
-android.updateButtonText(correctNoteNumber);
 
 

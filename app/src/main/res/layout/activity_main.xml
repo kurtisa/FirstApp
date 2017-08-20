@@ -7,60 +7,66 @@
     android:layout_height="match_parent"
     android:weightSum="2"
     android:orientation="vertical"
-    android:gravity="center_vertical|center_horizontal"
-    android:padding="10dp"
+    android:gravity="center"
+    android:padding="60dp"
     tools:context="com.example.kurtis.firstapp.MainActivity">
 
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-        <WebView xmlns:android="http://schemas.android.com/apk/res/android"
+    <FrameLayout
+        android:layout_width="120dp"
+        android:layout_height="163dp"
+        android:paddingLeft="1dip"
+        android:paddingRight="1dip"
+        android:paddingTop="9dip">
+
+        <WebView
             android:id="@+id/webview_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:weightSum="1"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"></WebView>
-    </RelativeLayout>
+            android:layout_gravity="center" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="1">
+    </FrameLayout>
+
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2">
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="1">
+
+
+            <Button
+                android:id="@+id/button1_id"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"/>
+
 
         <Button
-            android:id="@+id/button1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/button2_id"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="48dp"></Button>
 
-
+            android:layout_marginTop="58dp"></Button>
         <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/button1"
-            android:layout_alignStart="@+id/button1"
-            android:layout_marginTop="10dp"></Button>
+            android:id="@+id/button3_id"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="104dp"></Button>
 
 
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/button2"
-            android:layout_alignStart="@+id/button2"
-            android:layout_marginTop="16dp"></Button>
+    </FrameLayout>
 
-
-    </RelativeLayout>
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
 
 
 </LinearLayout>
