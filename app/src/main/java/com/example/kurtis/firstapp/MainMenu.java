@@ -15,16 +15,37 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainMenu extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
         private Intent intent;
+        TextView userName;
+        TextView task;
+        DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference userNameRef = mRootRef.child("username");
+        DatabaseReference taskRef = mRootRef.child("tasks");
+        Button log_out;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        userName = (TextView)findViewById(R.id.userName);
+        //task = (TextView)findViewById(R.id.taskToDo);
+
 
       /*  FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -44,19 +65,45 @@ public class MainMenu extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // log out button code here
 
-        ImageButton startButton = (ImageButton)findViewById(R.id.startButton);
+        final Button log_out = (Button) findViewById(R.id.log_out);
 
-        startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainMenu.this, MainActivity.class));
+        intent = new Intent(this, LoginActivity.class);
+
+        log_out.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v2) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(intent);
+                finish();
             }
+
         });
+
+
+
+
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String email = user.getEmail();
+        userName.setText(email);
+       taskRef.addValueEventListener(new ValueEventListener() {
 
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //String name = user.getDisplayName();
+            }
+
+            public void onCancelled(DatabaseError databaseError) {
+            }
+
+
+        });
+    }
 
     @Override
     public void onBackPressed() {
