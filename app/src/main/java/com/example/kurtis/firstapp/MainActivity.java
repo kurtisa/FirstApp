@@ -15,6 +15,11 @@ import android.webkit.WebSettings;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.text.CollationElementIterator;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
@@ -24,17 +29,23 @@ public class MainActivity extends AppCompatActivity {
 
     public int levelNum;
     public static boolean trebleClef;
-    public int question_num;
-    public int question_attempts;
+    public int question_num = 0;
+    public int question_attempts = 0;
     public int rightAnswer;
     public static String level;
     public int QuestionNum = 1;
     private WebView wv1;
     Context context;
+    public long t1;
+    DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
 
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+    String uid;
 
     protected void onCreate(Bundle savedInstanceState) {
+        t1 = System.currentTimeMillis();
+        uid = user.getUid();
         level = getIntent().getStringExtra("LEVEL");
         // for some unknown reason this isn't working. Get it back working and go from there.
 
@@ -91,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void createButtons(){
 
+
         final Button button1 = (Button) findViewById(R.id.button1_id);
         final Button button2 = (Button) findViewById(R.id.button2_id);
         final Button button3 = (Button) findViewById(R.id.button3_id);
@@ -110,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                     helloTextView.setText(display);
 
                     if (question_num == 10) {
-                        finish();
+                        finish_activity();
                     }
                     wv1.reload();
                     delayButtons();
@@ -127,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                     String display = Integer.toString(question_num) + "/10";
                     helloTextView.setText(display);
                     if (question_num == 10) {
-                        finish();
+                        finish_activity();
                     }
                     wv1.reload();
                     delayButtons();
@@ -146,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
                     String display = Integer.toString(question_num) + "/10";
                     helloTextView.setText(display);
                     if (question_num == 10) {
-                        finish();
+                        finish_activity();
                     }
                     wv1.reload();
                     delayButtons();
@@ -159,6 +171,24 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    public void finish_activity(){
+
+        DatabaseReference userNameRef = mRootRef.child("user-activity");
+        DatabaseReference uidRef = userNameRef.child(uid);
+        DatabaseReference instance = uidRef.push();
+        instance.child("Level").setValue(level);
+        instance.child("Attempts").setValue(question_attempts);
+
+        long t2 = System.currentTimeMillis();
+        long time_taken = t2 - t1;
+        instance.child("time-taken").setValue(time_taken);
+        instance.child("timestamp").setValue(System.currentTimeMillis());
+
+        finish();
+
+
+    }
     public void delayButtons(){
 
         Handler handler = new Handler();
@@ -166,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 updateButtonText();
             }
-        }, 700);
+        }, 900);
 
     }
 

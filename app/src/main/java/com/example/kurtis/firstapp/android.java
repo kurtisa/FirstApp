@@ -15,7 +15,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class android extends MainActivity {
 
-    public static String noteLetter;
+    public static String noteLetter = "X";
     Context context;
 
     public android(Context context) {

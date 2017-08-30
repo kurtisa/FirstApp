@@ -33,6 +33,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.kurtis.firstapp.MainMenu;
 import com.example.kurtis.firstapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -47,13 +48,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static android.Manifest.permission.READ_CONTACTS;
 import static java.security.AccessController.getContext;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>  {
+public class Teacher_sign_up extends AppCompatActivity implements LoaderCallbacks<Cursor>  {
 
     // TODO add teacher/student drop down option. Develop teacher page.
 
@@ -63,12 +67,12 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     private static final int REQUEST_READ_CONTACTS = 0;
 
     private FirebaseAuth mAuth;
-    private static final String TAG = "SignUpActivity";
+    private static final String TAG = "Teacher SignUpActivity";
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserSignUpTask mAuthTask = null;
+    private TeacherSignUpTask mAuthTask = null;
     private Intent intent;
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -77,26 +81,22 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
 
     private EditText mPasswordView;
     private EditText mPasswordVerify;
-    private EditText mAge;
-    private EditText mNickname;
     private EditText mUsername;
 
     private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up);
+        setContentView(R.layout.activity_teacher_sign_up);
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.signup_email);
+        mEmailView = (AutoCompleteTextView) findViewById(R.id.teacher_email);
         populateAutoComplete();
 
         mAuth = FirebaseAuth.getInstance();
 
-        mPasswordView = (EditText) findViewById(R.id.signup_password);
-        mAge = (EditText) findViewById(R.id.age_input);
-        mNickname = (EditText) findViewById(R.id.name_input);
-        mPasswordVerify = (EditText) findViewById(R.id.passwordVerify);
-        mUsername = (EditText) findViewById(R.id.signup_username_input);
+        mPasswordView = (EditText) findViewById(R.id.teacher_password);
+        mPasswordVerify = (EditText) findViewById(R.id.teacher_password_verify);
+        mUsername = (EditText) findViewById(R.id.teacher_username);
 
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -109,7 +109,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_up_button);
+        Button mEmailSignInButton = (Button) findViewById(R.id.teacher_sign_up_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -117,16 +117,16 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             }
         });
 
-        mSignUpFormView = findViewById(R.id.signup_form);
-        mProgressView = findViewById(R.id.signup_progress);
+        mSignUpFormView = findViewById(R.id.teacher_signup_form);
+        mProgressView = findViewById(R.id.teacher_signup_form_layout);
 
 
         intent = new Intent(this, MainMenu.class);
 // Create an ArrayAdapter using the string array and a default spinner layout
-      //  ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        //  ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
         //        R.array.student_teacher, android.R.layout.simple_spinner_item);
 // Specify the layout to use when the list of choices appears
-       // adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 // Apply the adapter to the spinner
         //spinner.setAdapter(adapter);
 
@@ -204,16 +204,13 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
         String username = mUsername.getText().toString();
-        String age = mAge.getText().toString();
-        String nick_name = mNickname.getText().toString();
         String password2 = mPasswordVerify.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        // Check for a valid password, if the user entered one.
-        if (TextUtils.isEmpty(password) || !Teacher_sign_up.isPasswordValid(password)) {
+        if (TextUtils.isEmpty(password) || !isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
@@ -223,7 +220,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             mUsername.setError(getString(R.string.error_field_required));
             focusView = mUsername;
             cancel = true;
-        }   else if (!Teacher_sign_up.isUsernameValid(username)) {
+        }   else if (!isUsernameValid(username)) {
             mUsername.setError(getString(R.string.error_invalid_username));
             focusView = mUsername;
             cancel = true;
@@ -235,23 +232,17 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             cancel = true;
         }
 
-        else if (!Teacher_sign_up.isEmailValid(email)) {
+        else if (!isEmailValid(email)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
         }
 
-        if (!Teacher_sign_up.isPasswordsMatch(password, password2)) {
+        if (!isPasswordsMatch(password, password2)) {
             mPasswordVerify.setError(getString(R.string.error_passwords_not_match));
             focusView = mPasswordVerify;
             cancel = true;
         }
-        if (!isAgeValid(age)) {
-            mPasswordVerify.setError(getString(R.string.error_passwords_not_match));
-            focusView = mPasswordVerify;
-            cancel = true;
-        }
-
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -261,21 +252,44 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserSignUpTask(email, password, username, age, nick_name);
+            mAuthTask = new TeacherSignUpTask(email, password, username);
             mAuthTask.execute((Void) null);
         }
     }
+// TODO separate these out I think... shouldn't take you too long.
 
-    private boolean isAgeValid(String age) {
-        int age_int = Integer.valueOf(age);
-        if (age_int > 0 & age_int <101){
-            return true;
-        } else {
-            return false;
-        }
 
+    public static boolean isNicknameValid(String nickname){
+        String ePattern =".#$[']";
+        java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
+        java.util.regex.Matcher m = p.matcher(nickname);
+        return !m.matches();
     }
 
+    public static boolean isUsernameValid(String username) {
+        String ePattern =".#$[']";
+        java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
+        java.util.regex.Matcher m = p.matcher(username);
+        return m.matches() & username.length() <= 13 & username.length() >= 6;
+    }
+
+    public static boolean isPasswordsMatch(String password, String password2) {
+
+        return password.equals(password2);
+    }
+
+
+    public static boolean isEmailValid(String email) {
+            String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+            java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
+            java.util.regex.Matcher m = p.matcher(email);
+            return m.matches() & email.length() < 255;
+    }
+
+    static public boolean isPasswordValid(String password) {
+        //TODO: Replace this with your own logic
+        return password.length() >= 8 && password.length() >= 6;
+    }
 
     /**
      * Shows the progress UI and hides the login form.
@@ -371,28 +385,23 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    private class UserSignUpTask extends AsyncTask<Void, Void, Boolean> {
+    private class TeacherSignUpTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mEmail;
         private final String mPassword;
         private final String mUsername;
-
-        private final String mAge;
-        private final String mNickname;
         private boolean success;
-        private Executor hi;
-        UserSignUpTask(String email, String password, String username, String age, String nickName) {
+
+        TeacherSignUpTask(String email, String password, String username) {
             mEmail = email;
             mPassword = password;
             mUsername = username;
-            mAge = age;
-            mNickname = nickName;
-
 
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
+
 
             Executor hi = new Executor() {
                 @Override
@@ -401,43 +410,36 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                 }
             };
 
-                    //TODO store extra information in database
-                   Task<AuthResult> task = mAuth.createUserWithEmailAndPassword(mEmail, mPassword)
-                            .addOnCompleteListener(hi, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete (@NonNull Task < AuthResult > task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            //TODO store extra information in database
+            Task< AuthResult> task = mAuth.createUserWithEmailAndPassword(mEmail, mPassword)
+                    .addOnCompleteListener(hi, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete (@NonNull Task < AuthResult > task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d(TAG, "createUserWithEmail:success");
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-                            String uid = user.getUid();
+                                String uid = user.getUid();
 
+                                DatabaseReference userNameRef = mRootRef.child("teacher_users");  // setting up the user information based on uid
+                                DatabaseReference uidRef = userNameRef.child(uid);
+                                uidRef.child("username").setValue(mUsername);
 
-                            DatabaseReference userNameRef = mRootRef.child("users");  // setting up the user information based on uid
-                            DatabaseReference uidRef = userNameRef.child(uid);
-                            uidRef.child("nickname").setValue(mNickname);
-                            uidRef.child("age").setValue(mAge);
-                            uidRef.child("username").setValue(mUsername);
+                                DatabaseReference usernameUidRef = mRootRef.child("username-uid"); //setting up an index of usernames mapped to uid
+                                DatabaseReference usernameRef = usernameUidRef.child(mUsername);
+                                usernameRef.child("uid").setValue(uid);
+                                success = true;
 
-
-                            DatabaseReference usernameUidRef = mRootRef.child("username-uid"); //setting up an index of usernames mapped to uid
-                            DatabaseReference usernameRef = usernameUidRef.child(mUsername);
-                            usernameRef.child("uid").setValue(uid);
-
-                            success = true;
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Looper.prepare();
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(SignUpActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            success = false;
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Looper.prepare();
+                                Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                                success = false;
+                            }
 
                         }
-
-                    }
-                });
+                    });
 
 
             try {
@@ -453,9 +455,6 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                 // An interrupt occurred while waiting for the task to complete.
                 // ...
             }
-
-
-
             return success;
         }
 
@@ -466,8 +465,8 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             showProgress(false);
 
             if (success) {
-               startActivity(intent);
-               finish();
+                startActivity(intent);
+                finish();
             } else {
                 mPasswordView.setError(getString(R.string.double_entry));
                 mPasswordView.requestFocus();

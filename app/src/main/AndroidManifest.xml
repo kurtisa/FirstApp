@@ -47,10 +47,14 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login"></activity>
+            android:label="@string/title_activity_login" />
         <activity
             android:name=".SignUpActivity"
-            android:label="@string/title_activity_sign_up"></activity>
+            android:label="@string/title_activity_sign_up" />
+        <activity android:name=".userChoice" />
+        <activity
+            android:name=".Teacher_sign_up"
+            android:label="@string/title_activity_teacher_sign_up"></activity>
     </application>
 
 </manifest>
