@@ -54,7 +54,14 @@
         <activity android:name=".userChoice" />
         <activity
             android:name=".Teacher_sign_up"
-            android:label="@string/title_activity_teacher_sign_up"></activity>
-    </application>
+            android:label="@string/title_activity_teacher_sign_up"/>
+
+            <activity
+            android:name=".student_info"
+            android:label="@string/title_activity_student_info"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+
+</application>
 
 </manifest>
