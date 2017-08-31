@@ -41,4 +41,7 @@
     <string name="title_activity_teacher_sign_up">Sign up</string>
     <string name="error_passwords_not_match">Passwords do not match</string>
     <string name="badDatabaseChars">.#$[\']</string>
+    <string name="FirebaseWeakPassword">Password is too weak.</string>
+    <string name="FirebaseNotValid">Your email or password is not valid. Please check your credentials</string>
+    <string name="FirebaseDoubleEntry">There is already an account associated with that email address</string>
 </resources>

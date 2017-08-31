@@ -39,7 +39,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -80,7 +84,8 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     private EditText mAge;
     private EditText mNickname;
     private EditText mUsername;
-
+    private String databaseAuthError;
+    private String databaseWriteError;
     private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -429,8 +434,20 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                             // If sign in fails, display a message to the user.
                             Looper.prepare();
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(SignUpActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+
+                            try {
+                                throw task.getException();
+                            } catch(FirebaseAuthWeakPasswordException e) {
+                                getString(R.string.FirebaseWeakPassword);
+                            } catch(FirebaseAuthInvalidCredentialsException e) {
+                                getString(R.string.FirebaseNotValid);
+
+                            } catch(FirebaseAuthUserCollisionException e) {
+                                getString(R.string.double_entry);
+                            } catch(Exception e) {
+                                databaseAuthError = e.getMessage();
+                            }
+
                             success = false;
 
                         }
@@ -458,21 +475,58 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             if (!success){
                 return false;
             }
-
-            // TODO need to add catches here just in case
-            Log.d(TAG, "putting extra info into database");
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             String uid = user.getUid();
-            DatabaseReference userNameRef = mRootRef.child("users");  // setting up the user information based on uid
+            DatabaseReference userNameRef = mRootRef.child("users");
             DatabaseReference uidRef = userNameRef.child(uid);
-            uidRef.child("nickname").setValue(mNickname);
-            uidRef.child("age").setValue(mAge);
-            uidRef.child("username").setValue(mUsername);
+
+            uidRef.child("nickname").setValue(mNickname, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                       databaseWriteError = ("Data could not be saved " + databaseError.getMessage());
+                        success = false;
+
+                    }
+                }
+            });
+
+            uidRef.child("age").setValue(mAge, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        databaseWriteError = ("Data could not be saved " + databaseError.getMessage());
+                        success = false;
+
+                    }
+                }
+            });
+
+            uidRef.child("username").setValue(mUsername, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        databaseWriteError = ("Data could not be saved " + databaseError.getMessage());
+                        success = false;
+                    }
+                }
+            });
+
 
             DatabaseReference usernameUidRef = mRootRef.child("username-uid"); //setting up an index of usernames mapped to uid
             DatabaseReference usernameRef = usernameUidRef.child(mUsername);
 
-            usernameRef.child("uid").setValue(uid);
+            usernameRef.child("uid").setValue(uid, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        databaseWriteError = ("Data could not be saved " + databaseError.getMessage());
+                        success = false;
+                    }
+                }
+            });
+
+
 
             return success;
         }
@@ -487,9 +541,13 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                startActivity(intent);
                finish();
             } else {
-                //TODO add some trickery for firebase errors
-                mPasswordView.setError(getString(R.string.double_entry));
-                mPasswordView.requestFocus();
+                if (databaseAuthError != null){
+                mPasswordVerify.setError(databaseAuthError);
+                mPasswordVerify.requestFocus();
+                } else {
+                    mPasswordVerify.setError(databaseWriteError);
+                    mPasswordVerify.requestFocus();
+                }
             }
         }
 

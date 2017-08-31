@@ -40,7 +40,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -368,6 +372,8 @@ public class Teacher_sign_up extends AppCompatActivity implements LoaderCallback
         private final String mPassword;
         private final String mUsername;
         private boolean success;
+        private String databaseWriteError;
+        private String databaseAuthError;
 
         TeacherSignUpTask(String email, String password, String username) {
             mEmail = email;
@@ -402,6 +408,19 @@ public class Teacher_sign_up extends AppCompatActivity implements LoaderCallback
                                 Looper.prepare();
                                 Log.w(TAG, "createUserWithEmail:failure", task.getException());
                                 success = false;
+
+                                try {
+                                    throw task.getException();
+                                } catch(FirebaseAuthWeakPasswordException e) {
+                                    databaseAuthError = getString(R.string.FirebaseWeakPassword);
+                                } catch(FirebaseAuthInvalidCredentialsException e) {
+                                    databaseAuthError = getString(R.string.FirebaseNotValid);
+
+                                } catch(FirebaseAuthUserCollisionException e) {
+                                    databaseAuthError = getString(R.string.FirebaseDoubleEntry);
+                                } catch(Exception e) {
+                                    databaseAuthError = e.getMessage();
+                                }
                             }
 
                         }
@@ -434,11 +453,17 @@ public class Teacher_sign_up extends AppCompatActivity implements LoaderCallback
 
             DatabaseReference userNameRef = mRootRef.child("teacher_users");  // setting up the user information based on uid
             DatabaseReference uidRef = userNameRef.child(uid);
-            uidRef.child("username").setValue(mUsername);
 
-            DatabaseReference usernameUidRef = mRootRef.child("username-uid"); //setting up an index of usernames mapped to uid
-            DatabaseReference usernameRef = usernameUidRef.child(mUsername);
-            usernameRef.child("uid").setValue(uid);
+
+            uidRef.child("username").setValue(mUsername, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        databaseWriteError = ("Data could not be saved " + databaseError.getMessage());
+                        success = false;
+                    }
+                }
+            });
 
             return success;
         }
@@ -453,9 +478,13 @@ public class Teacher_sign_up extends AppCompatActivity implements LoaderCallback
                 startActivity(intent);
                 finish();
             } else {
-                //TODO add some trickery for firebase errors
-                mPasswordView.setError(getString(R.string.double_entry));
-                mPasswordView.requestFocus();
+                if (databaseAuthError != null){
+                    mPasswordVerify.setError(databaseAuthError);
+                    mPasswordVerify.requestFocus();
+                } else {
+                    mPasswordVerify.setError(databaseWriteError);
+                    mPasswordVerify.requestFocus();
+                }
             }
         }
 

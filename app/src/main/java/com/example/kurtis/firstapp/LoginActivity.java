@@ -33,6 +33,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
@@ -341,7 +344,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         private final String mPassword;
         private boolean success;
         private boolean database_bool = false;
-
+        private String databaseAuthError;
         UserLoginTask(String email, String password) {
             mEmail = email;
             mPassword = password;
@@ -372,6 +375,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                 Log.d(TAG, "signInWithEmail:failure", task.getException());
                                 success = false;
 
+                                try {
+                                    throw task.getException();
+                                } catch(FirebaseAuthWeakPasswordException e) {
+                                    databaseAuthError = getString(R.string.FirebaseWeakPassword);
+                                } catch(FirebaseAuthInvalidCredentialsException e) {
+                                    databaseAuthError = getString(R.string.FirebaseNotValid);
+
+                                } catch(FirebaseAuthUserCollisionException e) {
+                                    databaseAuthError = getString(R.string.FirebaseDoubleEntry);
+                                } catch(Exception e) {
+                                    databaseAuthError = e.getMessage();
+                                }
+
                             }
                         }
                     });
@@ -401,9 +417,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 startActivity(intent);
                 finish();
             } else {
-                //TODO add some trickery for firebase errors
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                mEmailView.setError(databaseAuthError);
+                mEmailView.requestFocus();
             }
         }
 
