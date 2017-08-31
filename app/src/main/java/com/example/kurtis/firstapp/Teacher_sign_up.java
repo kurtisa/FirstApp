@@ -98,7 +98,7 @@ public class Teacher_sign_up extends AppCompatActivity implements LoaderCallback
         mPasswordVerify = (EditText) findViewById(R.id.teacher_password_verify);
         mUsername = (EditText) findViewById(R.id.teacher_username);
 
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mPasswordVerify.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
@@ -209,19 +209,35 @@ public class Teacher_sign_up extends AppCompatActivity implements LoaderCallback
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
-        if (TextUtils.isEmpty(password) || !isPasswordValid(password)) {
+        if (TextUtils.isEmpty(password)){
+            mPasswordView.setError(getString(R.string.error_field_required));
+            focusView = mPasswordView;
+            cancel = true;
+        } else if (!signInValidFunctions.isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
+        } else if (signInValidFunctions.hasIllegalChars(password)){
+            mPasswordView.setError(getString(R.string.error_invalid_entry));
+            focusView = mPasswordView;
+            cancel = true;
+        } else if (!signInValidFunctions.isPasswordsMatch(password, password2)) {
+            mPasswordVerify.setError(getString(R.string.error_passwords_not_match));
+            focusView = mPasswordVerify;
+            cancel = true;
         }
 
+        // Username checks
         if (TextUtils.isEmpty(username)) {
             mUsername.setError(getString(R.string.error_field_required));
             focusView = mUsername;
             cancel = true;
-        }   else if (!isUsernameValid(username)) {
+        }   else if (!signInValidFunctions.isUsernameValid(username)) {
             mUsername.setError(getString(R.string.error_invalid_username));
+            focusView = mUsername;
+            cancel = true;
+        } else if (signInValidFunctions.hasIllegalChars(username)) {
+            mUsername.setError(getString(R.string.error_invalid_entry));
             focusView = mUsername;
             cancel = true;
         }
@@ -230,19 +246,12 @@ public class Teacher_sign_up extends AppCompatActivity implements LoaderCallback
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        }
-
-        else if (!isEmailValid(email)) {
+        } else if (!signInValidFunctions.isEmailValid(email)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
         }
 
-        if (!isPasswordsMatch(password, password2)) {
-            mPasswordVerify.setError(getString(R.string.error_passwords_not_match));
-            focusView = mPasswordVerify;
-            cancel = true;
-        }
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -258,38 +267,6 @@ public class Teacher_sign_up extends AppCompatActivity implements LoaderCallback
     }
 // TODO separate these out I think... shouldn't take you too long.
 
-
-    public static boolean isNicknameValid(String nickname){
-        String ePattern =".#$[']";
-        java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
-        java.util.regex.Matcher m = p.matcher(nickname);
-        return !m.matches();
-    }
-
-    public static boolean isUsernameValid(String username) {
-        String ePattern =".#$[']";
-        java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
-        java.util.regex.Matcher m = p.matcher(username);
-        return m.matches() & username.length() <= 13 & username.length() >= 6;
-    }
-
-    public static boolean isPasswordsMatch(String password, String password2) {
-
-        return password.equals(password2);
-    }
-
-
-    public static boolean isEmailValid(String email) {
-            String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
-            java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
-            java.util.regex.Matcher m = p.matcher(email);
-            return m.matches() & email.length() < 255;
-    }
-
-    static public boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() >= 8 && password.length() >= 6;
-    }
 
     /**
      * Shows the progress UI and hides the login form.
@@ -418,17 +395,6 @@ public class Teacher_sign_up extends AppCompatActivity implements LoaderCallback
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "createUserWithEmail:success");
-                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-                                String uid = user.getUid();
-
-                                DatabaseReference userNameRef = mRootRef.child("teacher_users");  // setting up the user information based on uid
-                                DatabaseReference uidRef = userNameRef.child(uid);
-                                uidRef.child("username").setValue(mUsername);
-
-                                DatabaseReference usernameUidRef = mRootRef.child("username-uid"); //setting up an index of usernames mapped to uid
-                                DatabaseReference usernameRef = usernameUidRef.child(mUsername);
-                                usernameRef.child("uid").setValue(uid);
                                 success = true;
 
                             } else {
@@ -455,6 +421,25 @@ public class Teacher_sign_up extends AppCompatActivity implements LoaderCallback
                 // An interrupt occurred while waiting for the task to complete.
                 // ...
             }
+
+            if (!success) {
+                return false;
+            }
+
+            // TODO need to add catches here just in case
+
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+            String uid = user.getUid();
+
+            DatabaseReference userNameRef = mRootRef.child("teacher_users");  // setting up the user information based on uid
+            DatabaseReference uidRef = userNameRef.child(uid);
+            uidRef.child("username").setValue(mUsername);
+
+            DatabaseReference usernameUidRef = mRootRef.child("username-uid"); //setting up an index of usernames mapped to uid
+            DatabaseReference usernameRef = usernameUidRef.child(mUsername);
+            usernameRef.child("uid").setValue(uid);
+
             return success;
         }
 
@@ -468,6 +453,7 @@ public class Teacher_sign_up extends AppCompatActivity implements LoaderCallback
                 startActivity(intent);
                 finish();
             } else {
+                //TODO add some trickery for firebase errors
                 mPasswordView.setError(getString(R.string.double_entry));
                 mPasswordView.requestFocus();
             }

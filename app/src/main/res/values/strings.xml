@@ -17,11 +17,14 @@
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="action_sign_up">Sign up!</string>
-    <string name="error_invalid_username">Usernames should be between 6-13 characters</string>
+    <string name="error_invalid_username">Usernames should be between 6-24 characters</string>
+    <string name="error_invalid_nickname">Nickname should be less than 24 characters</string>
+
     <string name="error_invalid_age">Select a number between 0 and 100</string>
+    <string name="error_invalid_entry">Field should contain only letters, numbers and spaces </string>
 
     <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_invalid_password">Password should be between 8-32 characters</string>
     <string name="error_incorrect_password">Password or email is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="double_entry">There is already an account created with this email address.</string>
@@ -37,4 +40,5 @@
     </string-array>
     <string name="title_activity_teacher_sign_up">Sign up</string>
     <string name="error_passwords_not_match">Passwords do not match</string>
+    <string name="badDatabaseChars">.#$[\']</string>
 </resources>

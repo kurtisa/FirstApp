@@ -73,10 +73,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-
 
         intent = new Intent(this, MainMenu.class);
         signUpIntent = new Intent(this, userChoice.class);
@@ -204,9 +202,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        // Check for a valid password, if the user entered one.
-        if (TextUtils.isEmpty(password) || !Teacher_sign_up.isPasswordValid(password)) {
+
+        if (TextUtils.isEmpty(password)){
+            mPasswordView.setError(getString(R.string.error_field_required));
+            focusView = mPasswordView;
+            cancel = true;
+        } else if (!signInValidFunctions.isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
+            focusView = mPasswordView;
+            cancel = true;
+        } else if (signInValidFunctions.hasIllegalChars(password)){
+            mPasswordView.setError(getString(R.string.error_invalid_entry));
             focusView = mPasswordView;
             cancel = true;
         }
@@ -216,9 +222,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        }
-
-        else if (!Teacher_sign_up.isEmailValid(email)) {
+        } else if (!signInValidFunctions.isEmailValid(email)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
@@ -397,6 +401,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 startActivity(intent);
                 finish();
             } else {
+                //TODO add some trickery for firebase errors
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }

@@ -211,20 +211,38 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
-        // Check for a valid password, if the user entered one.
-        if (TextUtils.isEmpty(password) || !Teacher_sign_up.isPasswordValid(password)) {
+
+        // Check for a valid password, if the user entered one, if password is valid, check if passwords match.
+
+        if (TextUtils.isEmpty(password)){
+            mPasswordView.setError(getString(R.string.error_field_required));
+            focusView = mPasswordView;
+            cancel = true;
+        } else if (!signInValidFunctions.isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
+        } else if (signInValidFunctions.hasIllegalChars(password)){
+            mPasswordView.setError(getString(R.string.error_invalid_entry));
+            focusView = mPasswordView;
+            cancel = true;
+        } else if (!signInValidFunctions.isPasswordsMatch(password, password2)) {
+            mPasswordVerify.setError(getString(R.string.error_passwords_not_match));
+            focusView = mPasswordVerify;
+            cancel = true;
         }
 
+        // Username checks
         if (TextUtils.isEmpty(username)) {
             mUsername.setError(getString(R.string.error_field_required));
             focusView = mUsername;
             cancel = true;
-        }   else if (!Teacher_sign_up.isUsernameValid(username)) {
+        }   else if (!signInValidFunctions.isUsernameValid(username)) {
             mUsername.setError(getString(R.string.error_invalid_username));
+            focusView = mUsername;
+            cancel = true;
+        } else if (signInValidFunctions.hasIllegalChars(username)) {
+            mUsername.setError(getString(R.string.error_invalid_entry));
             focusView = mUsername;
             cancel = true;
         }
@@ -233,22 +251,28 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        }
-
-        else if (!Teacher_sign_up.isEmailValid(email)) {
+        } else if (!signInValidFunctions.isEmailValid(email)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
         }
 
-        if (!Teacher_sign_up.isPasswordsMatch(password, password2)) {
-            mPasswordVerify.setError(getString(R.string.error_passwords_not_match));
-            focusView = mPasswordVerify;
+
+        // check if nickname is valid
+        if (signInValidFunctions.hasIllegalChars(nick_name)) {
+            mNickname.setError(getString(R.string.error_invalid_entry));
+            focusView = mNickname;
+            cancel = true;
+        } else if (!signInValidFunctions.isNicknameValid(nick_name)) {
+            mNickname.setError(getString(R.string.error_invalid_nickname));
+            focusView = mNickname;
             cancel = true;
         }
-        if (!isAgeValid(age)) {
-            mPasswordVerify.setError(getString(R.string.error_passwords_not_match));
-            focusView = mPasswordVerify;
+
+        // check if age is valid
+            if (!signInValidFunctions.isAgeValid(age) && !TextUtils.isEmpty(age)) {
+            mAge.setError(getString(R.string.error_invalid_age));
+            focusView = mAge;
             cancel = true;
         }
 
@@ -266,20 +290,11 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         }
     }
 
-    private boolean isAgeValid(String age) {
-        int age_int = Integer.valueOf(age);
-        if (age_int > 0 & age_int <101){
-            return true;
-        } else {
-            return false;
-        }
-
-    }
-
 
     /**
      * Shows the progress UI and hides the login form.
      */
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
@@ -409,22 +424,6 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-                            String uid = user.getUid();
-
-
-                            DatabaseReference userNameRef = mRootRef.child("users");  // setting up the user information based on uid
-                            DatabaseReference uidRef = userNameRef.child(uid);
-                            uidRef.child("nickname").setValue(mNickname);
-                            uidRef.child("age").setValue(mAge);
-                            uidRef.child("username").setValue(mUsername);
-
-
-                            DatabaseReference usernameUidRef = mRootRef.child("username-uid"); //setting up an index of usernames mapped to uid
-                            DatabaseReference usernameRef = usernameUidRef.child(mUsername);
-                            usernameRef.child("uid").setValue(uid);
-
                             success = true;
                         } else {
                             // If sign in fails, display a message to the user.
@@ -438,6 +437,8 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
 
                     }
                 });
+
+
 
 
             try {
@@ -454,7 +455,24 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                 // ...
             }
 
+            if (!success){
+                return false;
+            }
 
+            // TODO need to add catches here just in case
+            Log.d(TAG, "putting extra info into database");
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            String uid = user.getUid();
+            DatabaseReference userNameRef = mRootRef.child("users");  // setting up the user information based on uid
+            DatabaseReference uidRef = userNameRef.child(uid);
+            uidRef.child("nickname").setValue(mNickname);
+            uidRef.child("age").setValue(mAge);
+            uidRef.child("username").setValue(mUsername);
+
+            DatabaseReference usernameUidRef = mRootRef.child("username-uid"); //setting up an index of usernames mapped to uid
+            DatabaseReference usernameRef = usernameUidRef.child(mUsername);
+
+            usernameRef.child("uid").setValue(uid);
 
             return success;
         }
@@ -469,6 +487,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                startActivity(intent);
                finish();
             } else {
+                //TODO add some trickery for firebase errors
                 mPasswordView.setError(getString(R.string.double_entry));
                 mPasswordView.requestFocus();
             }
