@@ -1,9 +1,15 @@
 package com.example.kurtis.firstapp;
-//THIS CODE CURRENTLY IS NOT IMPLEMENTED AT ALL.
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,21 +37,21 @@ public class MainMenu extends AppCompatActivity
         private Intent intent;
         TextView userName;
         TextView task;
-        DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference userNameRef = mRootRef.child("username");
-        DatabaseReference taskRef = mRootRef.child("tasks");
-        Button log_out;
-
+        MenuItem username_item;
+        private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        Toolbar actionBar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(actionBar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        userName = (TextView)findViewById(R.id.userName);
-        //task = (TextView)findViewById(R.id.taskToDo);
+        userName = (TextView) findViewById(R.id.userName);
+
+        task = (TextView)findViewById(R.id.taskToDo);
 
 
       /*  FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -56,11 +63,11 @@ public class MainMenu extends AppCompatActivity
             }
         });*/
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+       DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+       ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+               this, drawer, actionBar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
-        toggle.syncState();
+       toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -89,19 +96,28 @@ public class MainMenu extends AppCompatActivity
     @Override
     public void onStart() {
         super.onStart();
+        DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference taskRef = mRootRef.child("tasks");
+        //TODO retrieve teacher tasks
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String email = user.getEmail();
-        userName.setText(email);
-       taskRef.addValueEventListener(new ValueEventListener() {
+        String uid = user.getUid();
+        DatabaseReference uidRef = mRootRef.child("users").child(uid).child("username");
+
+        uidRef.addValueEventListener(new ValueEventListener() {
 
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //String name = user.getDisplayName();
+                //Log.w("MAIN MENU", (dataSnapshot.getValue(String.class)));
+
+                String username_string = dataSnapshot.getValue(String.class);
+                if (!username_string.isEmpty()) {
+                    MenuItem hey = menu.findItem(R.id.action_username);
+                    hey.setTitle(username_string);
+                }
             }
 
             public void onCancelled(DatabaseError databaseError) {
+              //  Log.w("MAIN MENU", "loadPost:onCancelled", databaseError.toException());
             }
-
-
         });
     }
 
@@ -119,7 +135,9 @@ public class MainMenu extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_menu, menu);
+
+        this.menu = menu;
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -134,6 +152,20 @@ public class MainMenu extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
+
+        if( R.id.action_user_icon == id){
+            return true;
+        }
+
+        if( R.id.action_username == id){
+            return true;
+        }
+
+        if( R.id.action_trophy_icon == id){
+            return true;
+        }
+        // User chose the "Favorite" action, mark the current item
+        // as a favorite...
 
         return super.onOptionsItemSelected(item);
     }

@@ -465,6 +465,20 @@ public class Teacher_sign_up extends AppCompatActivity implements LoaderCallback
                 }
             });
 
+
+            DatabaseReference usernameUidRef = mRootRef.child("username-uid"); //setting up an index of usernames mapped to uid
+            DatabaseReference usernameRef = usernameUidRef.child(mUsername);
+
+            usernameRef.child("uid").setValue(uid, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        databaseWriteError = ("Data could not be saved " + databaseError.getMessage());
+                        success = false;
+                    }
+                }
+            });
+
             return success;
         }
 

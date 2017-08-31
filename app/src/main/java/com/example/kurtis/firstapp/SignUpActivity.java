@@ -539,7 +539,9 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
 
             if (success) {
                startActivity(intent);
-               finish();
+
+
+                finish();
             } else {
                 if (databaseAuthError != null){
                 mPasswordVerify.setError(databaseAuthError);
