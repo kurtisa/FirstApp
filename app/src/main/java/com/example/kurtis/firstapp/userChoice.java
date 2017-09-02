@@ -1,8 +1,8 @@
 package com.example.kurtis.firstapp;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
@@ -13,9 +13,8 @@ public class userChoice extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_choice);
 
-        final Intent teacher_sign_up = new Intent (this, Teacher_sign_up.class);
-        final Intent student_sign_up = new Intent (this, SignUpActivity.class);
-
+        final Intent teacher_sign_up = new Intent(this, Teacher_sign_up.class);
+        final Intent student_sign_up = new Intent(this, SignUpActivity.class);
 
 
         Button studentButton = (Button) findViewById(R.id.student_button);
@@ -36,9 +35,6 @@ public class userChoice extends AppCompatActivity {
                 finish();
             }
         });
-
-
-
 
 
     }

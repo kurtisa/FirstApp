@@ -1,39 +1,30 @@
 package com.example.kurtis.firstapp;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
+
 import android.annotation.TargetApi;
-import android.app.Activity;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Looper;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.kurtis.firstapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -51,13 +42,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
+
 import static android.Manifest.permission.READ_CONTACTS;
-import static java.security.AccessController.getContext;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>  {
+public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
     // TODO add teacher/student drop down option. Develop teacher page.
 
@@ -65,10 +56,9 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
-
-    private FirebaseAuth mAuth;
     private static final String TAG = "SignUpActivity";
-
+    String errorFocus;
+    private FirebaseAuth mAuth;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -78,7 +68,6 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     private AutoCompleteTextView mEmailView;
     private View mSignUpFormView;
     private View mProgressView;
-
     private EditText mPasswordView;
     private EditText mPasswordVerify;
     private EditText mAge;
@@ -87,6 +76,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     private String databaseAuthError;
     private String databaseWriteError;
     private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,10 +118,10 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
 
         intent = new Intent(this, MainMenu.class);
 // Create an ArrayAdapter using the string array and a default spinner layout
-      //  ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        //  ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
         //        R.array.student_teacher, android.R.layout.simple_spinner_item);
 // Specify the layout to use when the list of choices appears
-       // adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 // Apply the adapter to the spinner
         //spinner.setAdapter(adapter);
 
@@ -141,7 +131,6 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     public void onStart() {
         super.onStart();
     }
-
 
 
     private void populateAutoComplete() {
@@ -219,7 +208,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
 
         // Check for a valid password, if the user entered one, if password is valid, check if passwords match.
 
-        if (TextUtils.isEmpty(password)){
+        if (TextUtils.isEmpty(password)) {
             mPasswordView.setError(getString(R.string.error_field_required));
             focusView = mPasswordView;
             cancel = true;
@@ -227,7 +216,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
-        } else if (signInValidFunctions.hasIllegalChars(password)){
+        } else if (signInValidFunctions.hasIllegalChars(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_entry));
             focusView = mPasswordView;
             cancel = true;
@@ -242,7 +231,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             mUsername.setError(getString(R.string.error_field_required));
             focusView = mUsername;
             cancel = true;
-        }   else if (!signInValidFunctions.isUsernameValid(username)) {
+        } else if (!signInValidFunctions.isUsernameValid(username)) {
             mUsername.setError(getString(R.string.error_invalid_username));
             focusView = mUsername;
             cancel = true;
@@ -275,7 +264,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         }
 
         // check if age is valid
-            if (!signInValidFunctions.isAgeValid(age) && !TextUtils.isEmpty(age)) {
+        if (!signInValidFunctions.isAgeValid(age) && !TextUtils.isEmpty(age)) {
             mAge.setError(getString(R.string.error_invalid_age));
             focusView = mAge;
             cancel = true;
@@ -401,6 +390,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         private final String mNickname;
         private boolean success;
         private Executor hi;
+
         UserSignUpTask(String email, String password, String username, String age, String nickName) {
             mEmail = email;
             mPassword = password;
@@ -421,41 +411,42 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                 }
             };
 
-                    //TODO store extra information in database
-                   Task<AuthResult> task = mAuth.createUserWithEmailAndPassword(mEmail, mPassword)
-                            .addOnCompleteListener(hi, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete (@NonNull Task < AuthResult > task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
-                            success = true;
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Looper.prepare();
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+            //TODO store extra information in database
+            Task<AuthResult> task = mAuth.createUserWithEmailAndPassword(mEmail, mPassword)
+                    .addOnCompleteListener(hi, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d(TAG, "createUserWithEmail:success");
+                                success = true;
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w(TAG, "createUserWithEmail:failure", task.getException());
 
-                            try {
-                                throw task.getException();
-                            } catch(FirebaseAuthWeakPasswordException e) {
-                                getString(R.string.FirebaseWeakPassword);
-                            } catch(FirebaseAuthInvalidCredentialsException e) {
-                                getString(R.string.FirebaseNotValid);
+                                try {
+                                    throw task.getException();
+                                } catch (FirebaseAuthWeakPasswordException e) {
+                                    databaseAuthError = getString(R.string.FirebaseWeakPassword);
+                                    errorFocus = "mPasswordView";
+                                } catch (FirebaseAuthInvalidCredentialsException e) {
+                                    databaseAuthError = getString(R.string.FirebaseNotValid);
+                                    errorFocus = "mEmailView";
 
-                            } catch(FirebaseAuthUserCollisionException e) {
-                                getString(R.string.double_entry);
-                            } catch(Exception e) {
-                                databaseAuthError = e.getMessage();
+                                } catch (FirebaseAuthUserCollisionException e) {
+                                    databaseAuthError = getString(R.string.double_entry);
+                                    errorFocus = "mEmailView";
+                                } catch (Exception e) {
+                                    databaseAuthError = e.getMessage();
+                                    errorFocus = "mEmailView";
+                                }
+
+                                success = false;
+
                             }
 
-                            success = false;
-
                         }
-
-                    }
-                });
-
-
+                    });
 
 
             try {
@@ -472,7 +463,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                 // ...
             }
 
-            if (!success){
+            if (!success) {
                 return false;
             }
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -484,7 +475,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                     if (databaseError != null) {
-                       databaseWriteError = ("Data could not be saved " + databaseError.getMessage());
+                        databaseWriteError = ("Data could not be saved " + databaseError.getMessage());
                         success = false;
 
                     }
@@ -527,7 +518,6 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             });
 
 
-
             return success;
         }
 
@@ -538,14 +528,19 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             showProgress(false);
 
             if (success) {
-               startActivity(intent);
+                startActivity(intent);
 
 
                 finish();
             } else {
-                if (databaseAuthError != null){
-                mPasswordVerify.setError(databaseAuthError);
-                mPasswordVerify.requestFocus();
+                if (databaseAuthError != null) {
+                    if (errorFocus == "mPasswordView") {
+                        mPasswordView.setError(databaseAuthError);
+                        mPasswordView.requestFocus();
+                    } else if (errorFocus == "mEmailView") {
+                        mEmailView.setError(databaseAuthError);
+                        mEmailView.requestFocus();
+                    }
                 } else {
                     mPasswordVerify.setError(databaseWriteError);
                     mPasswordVerify.requestFocus();

@@ -1,21 +1,21 @@
 package com.example.kurtis.firstapp;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Looper;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -26,7 +26,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -42,7 +41,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -55,10 +53,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
-
-    private FirebaseAuth mAuth;
     private static final String TAG = "LoginActivity";
-
+    private FirebaseAuth mAuth;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -206,7 +202,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         // Check for a valid password, if the user entered one.
 
-        if (TextUtils.isEmpty(password)){
+        if (TextUtils.isEmpty(password)) {
             mPasswordView.setError(getString(R.string.error_field_required));
             focusView = mPasswordView;
             cancel = true;
@@ -214,7 +210,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
-        } else if (signInValidFunctions.hasIllegalChars(password)){
+        } else if (signInValidFunctions.hasIllegalChars(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_entry));
             focusView = mPasswordView;
             cancel = true;
@@ -255,7 +251,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = 11;
 
-         //   mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            //   mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
             mLoginFormView.animate().setDuration(shortAnimTime).alpha(
                     show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
                 @Override
@@ -345,6 +341,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         private boolean success;
         private boolean database_bool = false;
         private String databaseAuthError;
+
         UserLoginTask(String email, String password) {
             mEmail = email;
             mPassword = password;
@@ -377,14 +374,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                                 try {
                                     throw task.getException();
-                                } catch(FirebaseAuthWeakPasswordException e) {
+                                } catch (FirebaseAuthWeakPasswordException e) {
                                     databaseAuthError = getString(R.string.FirebaseWeakPassword);
-                                } catch(FirebaseAuthInvalidCredentialsException e) {
+                                } catch (FirebaseAuthInvalidCredentialsException e) {
                                     databaseAuthError = getString(R.string.FirebaseNotValid);
 
-                                } catch(FirebaseAuthUserCollisionException e) {
+                                } catch (FirebaseAuthUserCollisionException e) {
                                     databaseAuthError = getString(R.string.FirebaseDoubleEntry);
-                                } catch(Exception e) {
+                                } catch (Exception e) {
                                     databaseAuthError = e.getMessage();
                                 }
 
@@ -412,7 +409,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
-          //  showProgress(false);
+            //  showProgress(false);
             if (success) {
                 startActivity(intent);
                 finish();
@@ -425,7 +422,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected void onCancelled() {
             mAuthTask = null;
-        //    showProgress(false);
+            //    showProgress(false);
         }
     }
 }

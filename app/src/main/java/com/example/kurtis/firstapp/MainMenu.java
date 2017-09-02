@@ -1,16 +1,8 @@
 package com.example.kurtis.firstapp;
-import android.app.Activity;
+
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.View;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -18,10 +10,10 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,11 +26,11 @@ import com.google.firebase.database.ValueEventListener;
 
 public class MainMenu extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-        private Intent intent;
-        TextView userName;
-        TextView task;
-        MenuItem username_item;
-        private Menu menu;
+    TextView userName;
+    TextView task;
+    String username_string;
+    private Intent intent;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +43,7 @@ public class MainMenu extends AppCompatActivity
 
         userName = (TextView) findViewById(R.id.userName);
 
-        task = (TextView)findViewById(R.id.taskToDo);
+        task = (TextView) findViewById(R.id.taskToDo);
 
 
       /*  FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -63,11 +55,11 @@ public class MainMenu extends AppCompatActivity
             }
         });*/
 
-       DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-       ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-               this, drawer, actionBar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, actionBar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
-       toggle.syncState();
+        toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -76,19 +68,16 @@ public class MainMenu extends AppCompatActivity
 
         final Button log_out = (Button) findViewById(R.id.log_out);
 
-        intent = new Intent(this, LoginActivity.class);
+        final Intent login_intent = new Intent(this, LoginActivity.class);
 
         log_out.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v2) {
                 FirebaseAuth.getInstance().signOut();
-                startActivity(intent);
+                startActivity(login_intent);
                 finish();
             }
 
         });
-
-
-
 
 
     }
@@ -108,15 +97,13 @@ public class MainMenu extends AppCompatActivity
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //Log.w("MAIN MENU", (dataSnapshot.getValue(String.class)));
 
-                String username_string = dataSnapshot.getValue(String.class);
-                if (!username_string.isEmpty()) {
-                    MenuItem hey = menu.findItem(R.id.action_username);
-                    hey.setTitle(username_string);
-                }
+                username_string = dataSnapshot.getValue(String.class);
+
             }
 
+
             public void onCancelled(DatabaseError databaseError) {
-              //  Log.w("MAIN MENU", "loadPost:onCancelled", databaseError.toException());
+                //  Log.w("MAIN MENU", "loadPost:onCancelled", databaseError.toException());
             }
         });
     }
@@ -135,9 +122,9 @@ public class MainMenu extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
         this.menu = menu;
-        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -153,15 +140,11 @@ public class MainMenu extends AppCompatActivity
             return true;
         }
 
-        if( R.id.action_user_icon == id){
+        if (R.id.action_user_icon == id) {
             return true;
         }
 
-        if( R.id.action_username == id){
-            return true;
-        }
-
-        if( R.id.action_trophy_icon == id){
+        if (R.id.action_trophy_icon == id) {
             return true;
         }
         // User chose the "Favorite" action, mark the current item
@@ -170,9 +153,8 @@ public class MainMenu extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -198,7 +180,6 @@ public class MainMenu extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
 
 }

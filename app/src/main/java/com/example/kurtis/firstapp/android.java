@@ -2,16 +2,8 @@ package com.example.kurtis.firstapp;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
-import android.widget.Button;
-import android.widget.TextView;
-
-import com.example.kurtis.firstapp.R;
-
-import java.util.concurrent.ThreadLocalRandom;
 
 public class android extends MainActivity {
 
@@ -21,10 +13,6 @@ public class android extends MainActivity {
     public android(Context context) {
 
         this.context = context;
-    }
-
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     public static int getNoteNumber(String noteLetter) {
@@ -53,7 +41,7 @@ public class android extends MainActivity {
                 noteNumber = 7;
                 break;
         }
-    return noteNumber;
+        return noteNumber;
     }
 
     public static String getNoteLetter(int noteNumber) {
@@ -85,26 +73,29 @@ public class android extends MainActivity {
         return noteString;
     }
 
-
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     // });
-@JavascriptInterface
-    public void updateJavascriptNote(String correctNote){
+    @JavascriptInterface
+    public void updateJavascriptNote(String correctNote) {
         noteLetter = correctNote;
     }
 
 
     @JavascriptInterface
-    public boolean javaScriptGetClef(){
-        if (MainActivity.trebleClef){
+    public boolean javaScriptGetClef() {
+        if (MainActivity.trebleClef) {
             Log.d("android.java", "treble clef enabled");
-        } else{
+        } else {
             Log.d("android.java", "bass clef enabled");
         }
         return MainActivity.trebleClef;
     }
+
     @JavascriptInterface
-    public String javaScriptGetLevel(){
+    public String javaScriptGetLevel() {
         Log.d("android.java", MainActivity.level);
         return MainActivity.level;
         //updateButtonText();
