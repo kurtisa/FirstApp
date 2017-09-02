@@ -9,8 +9,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.kurtis.firstapp.SignUpActivity"
-    android:weightSum="1">
+    android:weightSum="1"
+    tools:context="com.example.kurtis.firstapp.SignUpActivity">
 
     <!-- Login progress -->
 
@@ -43,9 +43,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
                     android:ems="10"
                     android:hint="@string/prompt_username"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName"
+                    android:maxLength="24" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -61,7 +63,8 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:hint="@string/prompt_age"
-                    android:inputType="number" />
+                    android:inputType="number"
+                    android:maxLength="3" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -73,9 +76,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                     android:ems="10"
                     android:hint="@string/prompt_nickname"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName"
+                    android:maxLength="24" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -106,6 +111,7 @@
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
+                    android:maxLength="32"
                     android:maxLines="1" />
 
             </android.support.design.widget.TextInputLayout>
@@ -123,6 +129,7 @@
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
+                    android:maxLength="32"
                     android:maxLines="1" />
 
             </android.support.design.widget.TextInputLayout>

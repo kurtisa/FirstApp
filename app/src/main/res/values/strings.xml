@@ -24,7 +24,7 @@
     <string name="error_invalid_entry">Field should contain only letters, numbers and spaces </string>
 
     <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">Password should be between 8-32 characters</string>
+    <string name="error_invalid_password">Password should be between 6-32 characters</string>
     <string name="error_incorrect_password">Password or email is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="double_entry">There is already an account created with this email address.</string>
@@ -32,8 +32,7 @@
         completions."
     </string>
     <string name="title_activity_sign_up">Sign in</string>
-
-
+    <string name="title_activity_student_info">Student Information</string>
     <string-array name="student_teacher">
         <item>Student</item>
         <item>Teacher</item>
@@ -44,4 +43,8 @@
     <string name="FirebaseWeakPassword">Password is too weak.</string>
     <string name="FirebaseNotValid">Your email or password is not valid. Please check your credentials</string>
     <string name="FirebaseDoubleEntry">There is already an account associated with that email address</string>
+    <string name="title_activity_teacher_main_menu">Teacher Main Menu</string>
+    <string name="addStudents">Add and organise students</string>
+    <string name="organiseStudents">Assign tasks and assessments</string>
+    <string name="reviewProgress">View student progress</string>
 </resources>

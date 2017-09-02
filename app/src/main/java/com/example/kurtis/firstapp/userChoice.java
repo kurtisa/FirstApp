@@ -17,6 +17,7 @@ public class userChoice extends AppCompatActivity {
         final Intent student_sign_up = new Intent(this, SignUpActivity.class);
 
 
+
         Button studentButton = (Button) findViewById(R.id.student_button);
         studentButton.setOnClickListener(new View.OnClickListener() {
             @Override

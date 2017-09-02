@@ -350,7 +350,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Object... params) {
 
-
             Executor matey = new Executor() {
                 @Override
                 public void execute(@NonNull Runnable runnable) {
@@ -402,8 +401,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 // An interrupt occurred while waiting for the task to complete.
                 // ...
             }
-
-
             return success;
         }
 

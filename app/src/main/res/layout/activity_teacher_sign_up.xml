@@ -53,6 +53,7 @@
                     android:id="@+id/teacher_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
                     android:hint="@string/prompt_username"
                     android:inputType="text"
                     android:maxLines="1"/>

@@ -23,4 +23,25 @@
         <item name="android:windowBackground">@drawable/logo</item>
     </style>
 
+    <!-- inherit from the material theme -->
+    <style name="TeacherAppTheme" parent="android:Theme.Material">
+        <!-- Main theme colors -->
+        <!--   your app branding color for the app bar -->
+        <item name="android:colorPrimary">@color/colorPrimary</item>
+        <!--   darker variant for the status bar and contextual app bars -->
+        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
+        <!--   theme UI controls like checkboxes and text fields -->
+        <item name="android:colorAccent">@color/colorAccent</item>
+
+
+    </style>
+
+    <style name="CardView.teacher" parent="@android:style/TextAppearance.Material.Title">
+        <item name="android:textColor">#102F20</item>
+        <item name="android:typeface">normal</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+
 </resources>

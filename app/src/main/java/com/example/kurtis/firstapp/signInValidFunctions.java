@@ -1,5 +1,7 @@
 package com.example.kurtis.firstapp;
 
+import android.util.Log;
+
 import org.jsoup.helper.StringUtil;
 
 import java.util.regex.Matcher;
@@ -41,7 +43,7 @@ class signInValidFunctions {
 
     static boolean isPasswordValid(String password) {
 
-        return (password.length() <= 32 && password.length() >= 8);
+        return (password.length() <= 32 && password.length() >= 6);
     }
 
 
@@ -49,8 +51,11 @@ class signInValidFunctions {
         if (!StringUtil.isNumeric(age)) {
             return false;
         }
-        int age_int = Integer.valueOf(age);
-        return age_int > 0 & age_int < 101;
+
+
+        long age_int = Long.valueOf(age);
+        Log.d("FUCK YOU", age);
+        return (age_int > 0 && age_int < 101);
 
     }
 }
