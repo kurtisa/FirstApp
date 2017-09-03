@@ -4,58 +4,40 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="380dp"
-    android:layout_height="503dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
+    android:paddingTop="?android:attr/actionBarSize"
     tools:context="com.example.kurtis.firstapp.teacher_main_menu"
     tools:layout_editor_absoluteX="8dp"
     tools:layout_editor_absoluteY="0dp">
 
-    <!-- A CardView that contains a TextView -->
-    <android.support.v7.widget.CardView
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/addStudentsCard"
         android:layout_width="match_parent"
         android:layout_height="152dp"
-        card_view:cardCornerRadius="4dp">
+        android:text="@string/addStudents"
+        android:textAppearance="@style/CardView.teacher"></android.support.v7.widget.AppCompatButton>
 
-        <TextView
-            android:id="@+id/addStudentsText"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/addStudents"
-            android:textAppearance="@style/CardView.teacher" />
-
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/setTasksCard"
         android:layout_width="match_parent"
         android:layout_height="152dp"
-        card_view:cardCornerRadius="4dp">
+        android:text="@string/organiseStudents"
+        android:textAppearance="@style/CardView.teacher">
 
-        <TextView
-            android:id="@+id/setTasksText"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/organiseStudents"
-            android:textAppearance="@style/CardView.teacher" />
+    </android.support.v7.widget.AppCompatButton>
 
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/reviewProgressCard"
         android:layout_width="match_parent"
         android:layout_height="152dp"
-        card_view:cardCornerRadius="4dp">
+        android:text="@string/reviewProgress"
+        android:textAppearance="@style/CardView.teacher"
+        card_view:cardCornerRadius="4dp"
+        card_view:cardElevation="16dp">
 
-        <TextView
-            android:id="@+id/reviewProgressText"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/reviewProgress"
-            android:textAppearance="@style/CardView.teacher" />
-
-    </android.support.v7.widget.CardView>
+    </android.support.v7.widget.AppCompatButton>
 
 
 </LinearLayout>

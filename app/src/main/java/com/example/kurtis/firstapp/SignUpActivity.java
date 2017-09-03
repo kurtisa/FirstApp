@@ -1,5 +1,7 @@
 package com.example.kurtis.firstapp;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
@@ -49,8 +51,6 @@ import static android.Manifest.permission.READ_CONTACTS;
  * A login screen that offers login via email/password.
  */
 public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
-
-    // TODO add teacher/student drop down option. Develop teacher page.
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -117,13 +117,6 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
 
 
         intent = new Intent(this, MainMenu.class);
-// Create an ArrayAdapter using the string array and a default spinner layout
-        //  ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-        //        R.array.student_teacher, android.R.layout.simple_spinner_item);
-// Specify the layout to use when the list of choices appears
-        // adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-// Apply the adapter to the spinner
-        //spinner.setAdapter(adapter);
 
     }
 
@@ -294,15 +287,16 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
-       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = 11;
+            final View mSignUpFormView = findViewById(R.id.signup_form);
+            final View mProgressView = findViewById(R.id.signup_progress);
+            mSignUpFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mSignUpFormView.animate().setDuration(shortAnimTime).alpha(
                     show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+                    mSignUpFormView.setVisibility(show ? View.GONE : View.VISIBLE);
                 }
             });
 
@@ -318,8 +312,8 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }*/
+            mSignUpFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
     }
 
     @Override
@@ -517,7 +511,18 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                 }
             });
 
+            DatabaseReference userTypeRef = mRootRef.child("userType"); //setting up an index of usernames mapped to uid
+            DatabaseReference teacherStudentRef = userTypeRef.child(uid);
 
+            teacherStudentRef.child("type").setValue("student", new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        databaseWriteError = ("Data could not be saved " + databaseError.getMessage());
+                        success = false;
+                    }
+                }
+            });
             return success;
         }
 

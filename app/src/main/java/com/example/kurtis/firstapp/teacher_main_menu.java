@@ -13,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,39 +33,68 @@ public class teacher_main_menu extends AppCompatActivity
     String username_string;
     private Intent intent;
     private Menu menu;
+    private Button buttonAdd;
+    private Button buttonTasks;
+    private Button buttonReview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.teacher_main_menu_content);
+        setContentView(R.layout.activity_teacher_main_menu);
         Toolbar actionBar = (Toolbar) findViewById(R.id.teacher_toolbar);
         setSupportActionBar(actionBar);
-        //getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         userName = (TextView) findViewById(R.id.userName);
-
         task = (TextView) findViewById(R.id.taskToDo);
+        buttonAdd = (Button) findViewById(R.id.addStudentsCard);
+        buttonTasks = (Button) findViewById(R.id.setTasksCard);
+        buttonReview = (Button) findViewById(R.id.reviewProgressCard);
+        final Intent login_intent = new Intent(this, LoginActivity.class);
+        final Intent teacherAddIntent = new Intent(this, teacherAddStudentsActivity.class);
 
 
-      /*  FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+        buttonAdd.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v2) {
+                //add intent here
+                // startActivity(login_intent);
+                startActivity(teacherAddIntent);
+                finish();
             }
-        });*/
+
+        });
+
+        buttonTasks.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v2) {
+                //add intent here
+                // startActivity(login_intent);
+
+                FirebaseAuth.getInstance().signOut();
+                startActivity(login_intent);
+                finish();
+            }
+
+        });
+
+        buttonReview.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v2) {
+                //add intent here
+                // startActivity(login_intent);
+                finish();
+            }
+
+        });
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.teacher_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, actionBar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        drawer.setDrawerListener(toggle);
-//        toggle.syncState();
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.teacher_nav_view);
-        //       navigationView.setNavigationItemSelectedListener(this);
-
+        navigationView.setNavigationItemSelectedListener(this);
 
     }
 
@@ -95,12 +126,12 @@ public class teacher_main_menu extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-    /*    if (drawer.isDrawerOpen(GravityCompat.START)) {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.teacher_drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-        }*/
+        }
     }
 
 
@@ -144,21 +175,21 @@ public class teacher_main_menu extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.lvl1) {
-            intent = new Intent(this, MainActivity.class);
-            intent.putExtra("LEVEL", "1");
-            startActivity(intent);
+            //intent = new Intent(this, MainActivity.class);
+            //   intent.putExtra("LEVEL", "1");
+            //  startActivity(intent);
         } else if (id == R.id.lvl2) {
-            intent = new Intent(this, MainActivity.class);
-            intent.putExtra("LEVEL", "2");
-            startActivity(intent);
+            //   intent = new Intent(this, MainActivity.class);
+            //  intent.putExtra("LEVEL", "2");
+            //   startActivity(intent);
         } else if (id == R.id.lvl3) {
-            intent = new Intent(this, MainActivity.class);
-            intent.putExtra("LEVEL", "3");
-            startActivity(intent);
+            //   intent = new Intent(this, MainActivity.class);
+            //  intent.putExtra("LEVEL", "3");
+            //  startActivity(intent);
         } else if (id == R.id.lvl4) {
-            intent = new Intent(this, MainActivity.class);
-            intent.putExtra("LEVEL", "4");
-            startActivity(intent);
+            //  intent = new Intent(this, MainActivity.class);
+            //  intent.putExtra("LEVEL", "4");
+            // startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

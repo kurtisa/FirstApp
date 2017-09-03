@@ -17,6 +17,7 @@
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="action_sign_up">Sign up!</string>
+    <string name="action_register_button">Not Registered?</string>
     <string name="error_invalid_username">Usernames should be between 6-24 characters</string>
     <string name="error_invalid_nickname">Nickname should be less than 24 characters</string>
 
@@ -48,3 +49,4 @@
     <string name="organiseStudents">Assign tasks and assessments</string>
     <string name="reviewProgress">View student progress</string>
 </resources>
+

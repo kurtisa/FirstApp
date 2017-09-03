@@ -36,6 +36,11 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +59,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private static final int REQUEST_READ_CONTACTS = 0;
     private static final String TAG = "LoginActivity";
+    // UI references.
+    public View mLoginFormView;
+    public View mProgressView;
     private FirebaseAuth mAuth;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -61,36 +69,33 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private UserLoginTask mAuthTask = null;
     private Intent intent;
     private Intent signUpIntent;
-
-    // UI references.
-    private View mLoginFormView;
-    private View mProgressView;
+    private Intent teacherIntent;
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
-
+        mProgressView = findViewById(R.id.login_progresshi);
         intent = new Intent(this, MainMenu.class);
         signUpIntent = new Intent(this, userChoice.class);
+        signUpIntent = new Intent(this, userChoice.class);
+        teacherIntent = new Intent(this, teacher_main_menu.class);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        mEmailView = (AutoCompleteTextView) findViewById(R.id.login_email);
         populateAutoComplete();
 
         mAuth = FirebaseAuth.getInstance();
 
-        mPasswordView = (EditText) findViewById(R.id.password);
+        mPasswordView = (EditText) findViewById(R.id.login_password);
 
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
+                if (id == R.id.login_password || id == EditorInfo.IME_NULL) {
                     attemptLogin();
                     return true;
                 }
@@ -98,7 +103,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        Button mEmailSignInButton = (Button) findViewById(R.id.login_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,7 +111,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button mSignUpButton = (Button) findViewById(R.id.sign_up_button);
+        Button mSignUpButton = (Button) findViewById(R.id.login_sign_up_button);
         mSignUpButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -121,11 +126,43 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
+        // 0Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+
         if (user != null) {
-            startActivity(intent);
-            finish();
+
+            showProgress(true);
+            DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+            //TODO retrieve teacher tasks
+            String uid = user.getUid();
+
+            DatabaseReference uidRef = mRootRef.child("userType").child(uid).child("type");
+            String user_type_string;
+            uidRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    String holder = dataSnapshot.getValue(String.class);
+                    Log.d("Login", holder);
+
+                    if (holder.equals("student")) {
+                        startActivity(intent);
+                        finish();
+                    } else if (holder.equals("teacher")) {
+                        startActivity(teacherIntent);
+                        finish();
+                    } else {
+                        Log.d("Login", "couldn't find user");
+                    }
+                }
+
+
+                public void onCancelled(DatabaseError databaseError) {
+                    //  Log.w("MAIN MENU", "loadPost:onCancelled", databaseError.toException());
+                }
+            });
+
         } else {
             // No user is signed in
         }
@@ -148,8 +185,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
             return true;
         }
-        /*
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
+
+      /*  if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
             Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
                     .setAction(android.R.string.ok, new View.OnClickListener() {
                         @Override
@@ -234,7 +271,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            //showProgress(true);
+            showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
         }
@@ -248,10 +285,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
+        mLoginFormView = findViewById(R.id.login_form);
+        mProgressView = findViewById(R.id.login_progresshi);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = 11;
 
-            //   mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
             mLoginFormView.animate().setDuration(shortAnimTime).alpha(
                     show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
                 @Override
@@ -312,11 +351,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-      /*  ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(LoginActivity.this,
-                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
-*/
-        //mEmailView.setAdapter(adapter);
+       /* ArrayAdapter<String> adapter =
+                new ArrayAdapter<String>(LoginActivity.this,
+                        android.R.layout.simple_dropdown_item_1ine, emailAddressCollection);
+
+        mEmailView.setAdapter(adapter);*/
     }
 
 
@@ -406,11 +445,46 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
-            //  showProgress(false);
             if (success) {
-                startActivity(intent);
+
+
+                DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+                //TODO retrieve teacher tasks
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                String uid = user.getUid();
+
+                DatabaseReference uidRef = mRootRef.child("userType").child(uid).child("type");
+                String user_type_string;
+                uidRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        String holder = dataSnapshot.getValue(String.class);
+                        Log.d("Login", holder);
+
+                        if (holder.equals("student")) {
+                            startActivity(intent);
+                            finish();
+                        } else if (holder.equals("teacher")) {
+                            startActivity(teacherIntent);
+                            finish();
+                        } else {
+                            Log.d("Login", "couldn't find user");
+                        }
+                    }
+
+
+                    public void onCancelled(DatabaseError databaseError) {
+                        //  Log.w("MAIN MENU", "loadPost:onCancelled", databaseError.toException());
+                    }
+                });
+
+                showProgress(false);
                 finish();
             } else {
+                showProgress(false);
+
                 mEmailView.setError(databaseAuthError);
                 mEmailView.requestFocus();
             }
@@ -419,7 +493,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected void onCancelled() {
             mAuthTask = null;
-            //    showProgress(false);
+            showProgress(false);
         }
     }
 }

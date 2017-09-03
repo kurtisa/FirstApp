@@ -1,5 +1,7 @@
 package com.example.kurtis.firstapp;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
@@ -108,11 +110,7 @@ public class Teacher_sign_up extends AppCompatActivity implements LoaderCallback
             }
         });
 
-        mSignUpFormView = findViewById(R.id.teacher_signup_form);
-        mProgressView = findViewById(R.id.teacher_signup_form_layout);
-
-
-        intent = new Intent(this, MainMenu.class);
+        intent = new Intent(this, teacher_main_menu.class);
 // Create an ArrayAdapter using the string array and a default spinner layout
         //  ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
         //        R.array.student_teacher, android.R.layout.simple_spinner_item);
@@ -266,15 +264,18 @@ public class Teacher_sign_up extends AppCompatActivity implements LoaderCallback
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
-       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        mSignUpFormView = findViewById(R.id.teacher_signup_form);
+        mProgressView = findViewById(R.id.teacher_progress);
 
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = 11;
+
+            mSignUpFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mSignUpFormView.animate().setDuration(shortAnimTime).alpha(
                     show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+                    mSignUpFormView.setVisibility(show ? View.GONE : View.VISIBLE);
                 }
             });
 
@@ -290,8 +291,8 @@ public class Teacher_sign_up extends AppCompatActivity implements LoaderCallback
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }*/
+            mSignUpFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
     }
 
     @Override
@@ -467,6 +468,31 @@ public class Teacher_sign_up extends AppCompatActivity implements LoaderCallback
                     }
                 }
             });
+
+            DatabaseReference userTypeRef = mRootRef.child("userType"); //setting up an index of usernames mapped to uid
+            DatabaseReference teacherStudentRef = userTypeRef.child(uid);
+
+            teacherStudentRef.child("type").setValue("teacher", new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        databaseWriteError = ("Data could not be saved " + databaseError.getMessage());
+                        success = false;
+                    }
+                }
+            });
+
+          /*  DatabaseReference teacherListRef = mRootRef.child("teacher-list").child(mUsername); //setting up an index of usernames mapped to uid
+
+            teacherListRef.child(mUsername).setValue("teacher", new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        databaseWriteError = ("Data could not be saved " + databaseError.getMessage());
+                        success = false;
+                    }
+                }
+            });*/
 
             return success;
         }
