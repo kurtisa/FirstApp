@@ -5,19 +5,18 @@
     xmlns:tools="http://schemas.an droid.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="2"
-    android:orientation="vertical"
+    android:background="#FFFFFF"
     android:gravity="center"
+    android:orientation="vertical"
     android:padding="60dp"
+    android:weightSum="2"
     tools:context="com.example.kurtis.firstapp.MainActivity">
 
 
     <FrameLayout
-        android:layout_width="120dp"
-        android:layout_height="163dp"
-        android:paddingLeft="1dip"
-        android:paddingRight="1dip"
-        android:paddingTop="9dip">
+        android:layout_width="289dp"
+        android:layout_height="240dp"
+        android:layout_weight="0.69">
 
         <WebView
             android:id="@+id/webview_main"
@@ -28,45 +27,62 @@
     </FrameLayout>
 
     <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2">
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:weightSum="1">
+        android:layout_width="match_parent"
+        android:layout_height="157dp"
+        android:layout_weight="0.32"
+        android:paddingTop="20dp">
 
+        <ProgressBar
+            android:id="@+id/determinateBar"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="90dp"
+            android:indeterminateTintMode="src_over"
+            android:progress="5"
+            android:progressBackgroundTint="@color/colorGreyDark" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/button1_id"
-                android:layout_width="250dp"
-                android:layout_height="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/shape" />
 
+            <Button
+                android:id="@+id/button2_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/shape"></Button>
 
-        <Button
-            android:id="@+id/button2_id"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
-            android:layout_centerHorizontal="true"
-
-            android:layout_marginTop="58dp"></Button>
-        <Button
-            android:id="@+id/button3_id"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="104dp"></Button>
+            <Button
+                android:id="@+id/button3_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/shape"></Button>
+        </LinearLayout>
 
 
     </FrameLayout>
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
 
 
 </LinearLayout>

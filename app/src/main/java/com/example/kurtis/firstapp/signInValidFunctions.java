@@ -1,7 +1,5 @@
 package com.example.kurtis.firstapp;
 
-import android.util.Log;
-
 import org.jsoup.helper.StringUtil;
 
 import java.util.regex.Matcher;
@@ -18,10 +16,9 @@ class signInValidFunctions {
     }
 
     static boolean hasIllegalChars(String string) {
-
-        Pattern regex = Pattern.compile("[\\p{Punct}]");
-
-        return regex.matcher(string).find();
+        Pattern punct = Pattern.compile("[\\p{Punct}]");
+        Pattern spaces = Pattern.compile("[\\p{Space}]");
+        return (punct.matcher(string).find() | spaces.matcher(string).find());
     }
 
     static boolean isUsernameValid(String username) {
@@ -54,7 +51,6 @@ class signInValidFunctions {
 
 
         long age_int = Long.valueOf(age);
-        Log.d("FUCK YOU", age);
         return (age_int > 0 && age_int < 101);
 
     }

@@ -14,7 +14,19 @@
         <item
             android:id="@+id/lvl4"
             android:title="Level 4" />
-    </group>
 
+        <item
+            android:id="@+id/lvl5"
+            android:title="Touch Questions FACE" />
+        <item
+            android:id="@+id/lvl6"
+            android:title="Touch Questions EGBDF" />
+        <item
+            android:id="@+id/lvl7"
+            android:title="Level 3" />
+        <item
+            android:id="@+id/lvl8"
+            android:title="Level 4" />
+    </group>
 
 </menu>

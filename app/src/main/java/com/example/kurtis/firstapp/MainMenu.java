@@ -4,16 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,21 +28,18 @@ public class MainMenu extends AppCompatActivity
     String username_string;
     private Intent intent;
     private Menu menu;
+    private Intent login_intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_menu);
+        setContentView(R.layout.app_bar_main_menu);
         Toolbar actionBar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(actionBar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
 
-        userName = (TextView) findViewById(R.id.userName);
-
-        task = (TextView) findViewById(R.id.taskToDo);
-
-
+        login_intent = new Intent(this, LoginActivity.class);
       /*  FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,32 +49,76 @@ public class MainMenu extends AppCompatActivity
             }
         });*/
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, actionBar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+        ImageButton noteRhythm = (ImageButton) findViewById(R.id.noteRythm);
+        ImageButton restRhythm = (ImageButton) findViewById(R.id.restRhythm);
+        ImageButton faceLearn = (ImageButton) findViewById(R.id.faceLearn);
+        ImageButton faceTouch = (ImageButton) findViewById(R.id.faceTouch);
+        ImageButton egbdfLearn = (ImageButton) findViewById(R.id.egbdfLearn);
+        ImageButton egbdfTouch = (ImageButton) findViewById(R.id.egbdfTouch);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        // log out button code here
-
-        final Button log_out = (Button) findViewById(R.id.log_out);
 
         final Intent login_intent = new Intent(this, LoginActivity.class);
+        final Intent teacherAddIntent = new Intent(this, teacherAddStudentsActivity.class);
 
-        log_out.setOnClickListener(new View.OnClickListener() {
+        final Intent noteRhythmIntent = new Intent(this, rhythmQuestions.class);
+
+        noteRhythm.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v2) {
-                FirebaseAuth.getInstance().signOut();
-                startActivity(login_intent);
-                finish();
+                noteRhythmIntent.putExtra("LEVEL", "8");
+                startActivity(noteRhythmIntent);
+            }
+
+        });
+        final Intent restIntent = new Intent(this, rhythmQuestions.class);
+
+        restRhythm.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v2) {
+                restIntent.putExtra("LEVEL", "9");
+                startActivity(restIntent);
+            }
+        });
+
+        final Intent faceIntent = new Intent(this, MainActivity.class);
+
+        faceLearn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v2) {
+                faceIntent.putExtra("LEVEL", "1");
+                startActivity(faceIntent);
             }
 
         });
 
+        final Intent faceTouchIntent = new Intent(this, touchQuestions.class);
+
+
+        faceTouch.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v2) {
+                faceTouchIntent.putExtra("LEVEL", "6");
+                startActivity(faceTouchIntent);
+            }
+
+        });
+
+        final Intent egbdfLearnIntent = new Intent(this, MainActivity.class);
+
+        egbdfLearn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v2) {
+                egbdfLearnIntent.putExtra("LEVEL", "2");
+                startActivity(egbdfLearnIntent);
+            }
+
+        });
+        final Intent egbdfTouchIntent = new Intent(this, touchQuestions.class);
+
+        egbdfTouch.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v2) {
+                egbdfTouchIntent.putExtra("LEVEL", "5");
+                startActivity(egbdfTouchIntent);
+            }
+        });
 
     }
+
 
     @Override
     public void onStart() {
@@ -108,15 +146,6 @@ public class MainMenu extends AppCompatActivity
         });
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
 
 
     @Override
@@ -136,19 +165,18 @@ public class MainMenu extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_log_student_out) {
+            FirebaseAuth.getInstance().signOut();
+            startActivity(login_intent);
+            finish();
         }
 
-        if (R.id.action_user_icon == id) {
-            return true;
-        }
+        if (R.id.action_settings == id) {
 
-        if (R.id.action_trophy_icon == id) {
+            startActivity(new Intent(this, StudentSettingsActivity.class));
+
             return true;
         }
-        // User chose the "Favorite" action, mark the current item
-        // as a favorite...
 
         return super.onOptionsItemSelected(item);
     }
@@ -159,9 +187,7 @@ public class MainMenu extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.lvl1) {
-            intent = new Intent(this, MainActivity.class);
-            intent.putExtra("LEVEL", "1");
-            startActivity(intent);
+
         } else if (id == R.id.lvl2) {
             intent = new Intent(this, MainActivity.class);
             intent.putExtra("LEVEL", "2");
@@ -174,10 +200,19 @@ public class MainMenu extends AppCompatActivity
             intent = new Intent(this, MainActivity.class);
             intent.putExtra("LEVEL", "4");
             startActivity(intent);
+        } else if (id == R.id.lvl5) {
+            intent = new Intent(this, touchQuestions.class);
+            intent.putExtra("LEVEL", "5");
+            startActivity(intent);
+        } else if (id == R.id.lvl6) {
+            intent = new Intent(this, touchQuestions.class);
+            intent.putExtra("LEVEL", "6");
+            startActivity(intent);
+        } else if (id == R.id.lvl7) {
+            intent = new Intent(this, touchQuestions.class);
+            intent.putExtra("LEVEL", "7");
+            startActivity(intent);
         }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 

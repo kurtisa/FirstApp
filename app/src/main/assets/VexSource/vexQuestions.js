@@ -14,9 +14,14 @@ max = Math.floor(3);
 min = Math.ceil(0);
 max = Math.floor(11);
 }
-var correctNoteNumber = Math.floor(Math.random() * (max - min + 1)) + min;
 
+do{
+var randomTry = Math.floor(Math.random() * (max - min + 1)) + min;
+var same = android.rememberRandom(randomTry)
+}
+while(same == '1');
 
+var correctNoteNumber = randomTry;
 //determine which clef to display
 
 var isTreble
@@ -32,14 +37,17 @@ if (isTreble){
 }
 
 
-var canvas = $("#container")[0];
-  var renderer = new Vex.Flow.Renderer(canvas,
-    Vex.Flow.Renderer.Backends.CANVAS);
+var div = document.getElementById("question")
+var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+renderer.resize(289, 240);
 
   var ctx = renderer.getContext();
-  var stave = new Vex.Flow.Stave(60, 0, 75);
+  ctx.scale(3, 3);
+var stave = new Vex.Flow.Stave(10, -20, 70);
+
+
   //renderer.resize(200, 100);
-  stave.addClef(stringClef).setContext(ctx).draw();
+stave.addClef(stringClef).setContext(ctx).draw();
 
 var noteLetter;
 var accidental;
@@ -120,7 +128,7 @@ if (level == '1'){
     ];
     } else {
         notes = [
-    new Vex.Flow.StaveNote({clef: stringClef, keys: [noteLetter+pitch], duration: "q" }),
+    new Vex.Flow.StaveNote({clef: stringClef, keys: [noteLetter+pitch], duration: "q", auto_stem: true}),
     ];
     }
 

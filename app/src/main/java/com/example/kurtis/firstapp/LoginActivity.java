@@ -143,18 +143,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    String holder = dataSnapshot.getValue(String.class);
-                    Log.d("Login", holder);
-
-                    if (holder.equals("student")) {
-                        startActivity(intent);
-                        finish();
-                    } else if (holder.equals("teacher")) {
-                        startActivity(teacherIntent);
-                        finish();
-                    } else {
-                        Log.d("Login", "couldn't find user");
+                    try {
+                        String holder = dataSnapshot.getValue(String.class);
+                        if (holder.equals("student")) {
+                            startActivity(intent);
+                            finish();
+                        } else if (holder.equals("teacher")) {
+                            startActivity(teacherIntent);
+                            finish();
+                        } else {
+                            Log.d("Login", "couldn't find user");
+                        }
+                    } catch (NullPointerException e) {
+                        FirebaseAuth.getInstance().signOut();
                     }
+
                 }
 
 

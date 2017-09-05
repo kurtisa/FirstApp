@@ -1,6 +1,7 @@
 package com.example.kurtis.firstapp;
 
-import android.content.Context;
+import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -11,8 +12,10 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -23,7 +26,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 
 public class MainActivity extends AppCompatActivity {
-
     public static boolean trebleClef;
     public static String level;
     public int levelNum;
@@ -32,17 +34,24 @@ public class MainActivity extends AppCompatActivity {
     public int rightAnswer;
     public int QuestionNum = 1;
     public long t1;
-    Context context;
+    ProgressBar progressBar;
     Boolean logged_out;
     DatabaseReference mRootRef;
     FirebaseUser user;
     String uid;
+    private boolean flag = true;
     private WebView wv1;
+    private Button button1;
+    private Button button2;
+    private Button button3;
 
     protected void onCreate(Bundle savedInstanceState) {
+        setContentView(R.layout.activity_main);
+
         t1 = System.currentTimeMillis();
 
         mRootRef = FirebaseDatabase.getInstance().getReference();
+
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         try {
@@ -53,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
             uid = "xxxxxxxxx";
         }
         level = getIntent().getStringExtra("LEVEL");
-        // for some unknown reason this isn't working. Get it back working and go from there.
 
         if ((Objects.equals(level, "1") | Objects.equals(level, "2"))) {
             trebleClef = true;
@@ -65,20 +73,19 @@ public class MainActivity extends AppCompatActivity {
 
         question_num = 1;
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         wv1 = (WebView) findViewById(R.id.webview_main);
-        wv1.addJavascriptInterface(new android(context), "android");
+        wv1.addJavascriptInterface(new android(getApplicationContext()), "android");
 
         final String VexQuestions = "<!DOCTYPE html>" +
                 "<html>" +
                 "<head>" +
                 "<meta charset=\"UTF-8\">" +
                 "<link rel=\"stylesheet\" type=\"text/css\" href=\"VexSource/vexQuestions.css\".css\"" +
-                "</head>" +
+                "</head>" + "<body leftmargin=\"0\" topmargin=\"0\" rightmargin=\"0\" bottommargin=\"0\"> " +
                 "<body>" +
                 "<div id=question>" +
                 "</div>" +
-                "<canvas id=\"container\" width=\"200\" height=\"100\"></canvas>" +
+                "<canvas id=\"container\" width=\"200\" height=\"10\"></canvas>" +
                 "<script src=\"jquery-3.2.1.slim.js\"> </script>" +
                 "<script src=\"raphael.min.js\"> </script>" +
                 "<script src=\"vector-master/releases/vexflow-min.js\"> </script>" +
@@ -91,46 +98,44 @@ public class MainActivity extends AppCompatActivity {
 
         WebSettings webSettings = wv1.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        webSettings.setDomStorageEnabled(true);
         webSettings.setLoadWithOverviewMode(true);
-        //webSettings.setUseWideViewPort(true);
-        // webSettings.setBuiltInZoomControls(true);
-        //webSettings.setDisplayZoomControls(false);
-        //webSettings.setSupportZoom(true);
         webSettings.setDefaultTextEncodingName("utf-8");
         webSettings.setDomStorageEnabled(true);
 
         //wv1.loadUrl("http://beta.html5test.com/");
-
+        progressBar = (ProgressBar) findViewById(R.id.determinateBar);
         wv1.loadDataWithBaseURL("file:///android_asset/", VexQuestions, "text/html", "utf-8", null);
         createButtons();
     }
 
     public void createButtons() {
 
+        button1 = (Button) findViewById(R.id.button1_id);
+        button2 = (Button) findViewById(R.id.button2_id);
+        button3 = (Button) findViewById(R.id.button3_id);
 
-        final Button button1 = (Button) findViewById(R.id.button1_id);
-        final Button button2 = (Button) findViewById(R.id.button2_id);
-        final Button button3 = (Button) findViewById(R.id.button3_id);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            button1.getBackground().setColorFilter(getResources().getColor(R.color.colorBlueLight, getTheme()), PorterDuff.Mode.MULTIPLY);
+            button2.getBackground().setColorFilter(getResources().getColor(R.color.colorBlueLight, getTheme()), PorterDuff.Mode.MULTIPLY);
+            button3.getBackground().setColorFilter(getResources().getColor(R.color.colorBlueLight, getTheme()), PorterDuff.Mode.MULTIPLY);
+        }
 
-        final TextView helloTextView = (TextView) findViewById(R.id.textView2);
-        helloTextView.setText("1/10");
+
         delayButtons();
-
 
         button1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v2) {
                 question_attempts += 1;
                 if (rightAnswer == 1) {
                     question_num += 1;
-                    String display = Integer.toString(question_num) + "/10";
-                    helloTextView.setText(display);
+                    updateProgress(button1);
 
                     if (question_num == 10) {
                         finish_activity();
                     }
-                    wv1.reload();
                     delayButtons();
+                } else {
+                    wrongAnswer(button1);
                 }
 
 
@@ -141,14 +146,14 @@ public class MainActivity extends AppCompatActivity {
                 question_attempts += 1;
                 if (rightAnswer == 2) {
                     question_num += 1;
-                    String display = Integer.toString(question_num) + "/10";
-                    helloTextView.setText(display);
+                    updateProgress(button2);
                     if (question_num == 10) {
                         finish_activity();
                     }
-                    wv1.reload();
                     delayButtons();
 
+                } else {
+                    wrongAnswer(button2);
                 }
 
 
@@ -160,20 +165,39 @@ public class MainActivity extends AppCompatActivity {
                 question_attempts += 1;
                 if (rightAnswer == 3) {
                     question_num += 1;
-                    String display = Integer.toString(question_num) + "/10";
-                    helloTextView.setText(display);
+                    updateProgress(button3);
                     if (question_num == 10) {
                         finish_activity();
                     }
-                    wv1.reload();
                     delayButtons();
+                } else {
+                    wrongAnswer(button3);
                 }
-                Log.d("hi", "button3 clicked");
-
             }
         });
 
 
+    }
+
+    private void wrongAnswer(Button button) {
+
+        YoYo.with(Techniques.Wave)
+                .duration(300)
+                .repeat(1)
+                .playOn(button);
+    }
+
+    private void updateProgress(Button button) {
+        int progress = question_num * 10;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            progressBar.setProgress(progress, true);
+        }
+
+        YoYo.with(Techniques.Pulse)
+                .duration(600)
+                .repeat(1)
+                .playOn(button);
+        button.getBackground().setColorFilter(0xFF00FF00, PorterDuff.Mode.MULTIPLY);
     }
 
 
@@ -198,11 +222,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void delayButtons() {
-
+        wv1.reload();
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
                 updateButtonText();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    button1.getBackground().setColorFilter(getResources().getColor(R.color.colorBlueLight, getTheme()), PorterDuff.Mode.MULTIPLY);
+                    button2.getBackground().setColorFilter(getResources().getColor(R.color.colorBlueLight, getTheme()), PorterDuff.Mode.MULTIPLY);
+                    button3.getBackground().setColorFilter(getResources().getColor(R.color.colorBlueLight, getTheme()), PorterDuff.Mode.MULTIPLY);
+
+                }
             }
         }, 900);
 
@@ -211,10 +241,6 @@ public class MainActivity extends AppCompatActivity {
 
     public int updateButtonText() {
         //   Log.d("CurrentNote right after reload", android.noteLetter);
-
-        final Button button1 = (Button) findViewById(R.id.button1_id);
-        final Button button2 = (Button) findViewById(R.id.button2_id);
-        final Button button3 = (Button) findViewById(R.id.button3_id);
         //int rightAnswer = 0; // if 1, button 1 is correct, if 2 button 2, if 3 button 3
         int correctNote = android.getNoteNumber(android.noteLetter);
         int buttonOrder = ThreadLocalRandom.current().nextInt(0, 5 + 1);
@@ -275,7 +301,6 @@ public class MainActivity extends AppCompatActivity {
                 button2.setText(android.getNoteLetter(incorrectNoteNumber2));
                 break;
         }
-        Log.d("rightAnswer at update", Integer.toString(rightAnswer));
         return rightAnswer;
     }
 

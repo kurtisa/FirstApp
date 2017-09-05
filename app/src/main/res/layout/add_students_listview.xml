@@ -1,9 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?><!--  Single List Item Design -->
 
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/list"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardBackgroundColor="@color/colorGreyLight"
+    card_view:cardCornerRadius="10dp"
+    card_view:cardElevation="5dp">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/student_username"
+            android:layout_width="300dp"
+            android:layout_height="60dp"
     android:padding="10dip"
     android:textSize="16dip"
     android:textStyle="bold"></TextView>
+
+        <ImageView
+            android:id="@+id/paired_image"
+            android:layout_width="match_parent"
+            android:layout_height="60dp" />
+    </LinearLayout>
+</android.support.v7.widget.CardView>

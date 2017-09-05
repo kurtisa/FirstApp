@@ -1,48 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.ContentFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
+
     tools:context="com.example.kurtis.firstapp.MainMenu"
     tools:showIn="@layout/app_bar_main_menu">
 
-    <LinearLayout
-        android:layout_width="355dp"
-        android:layout_height="503dp"
-        android:orientation="horizontal"
-        tools:layout_editor_absoluteY="0dp"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="20dp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="8dp">
 
-        <Button
-            android:id="@+id/log_out"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Log Out"
-            tools:layout_editor_absoluteX="104dp"
-            tools:layout_editor_absoluteY="207dp" />
+        <android.support.v7.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:orientation="vertical"
+            tools:layout_editor_absoluteY="8dp">
 
-        <TextView
-            android:id="@+id/taskToDo"
-            android:layout_width="100dp"
-            android:layout_height="20dp"
-            android:layout_weight="1"
-            android:text="task to do"
-            android:visibility="invisible"
-            tools:layout_editor_absoluteX="146dp"
-            tools:layout_editor_absoluteY="152dp" />
+            <ImageButton
+                android:id="@+id/noteRythm"
+                android:layout_width="105dp"
+                android:layout_height="105dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/cool_quarter" />
 
-        <TextView
-            android:id="@+id/userName"
-            android:layout_width="93dp"
-            android:layout_height="21dp"
-            android:layout_weight="1"
-            android:text="username"
-            android:visibility="visible"
-            tools:layout_editor_absoluteX="256dp"
-            tools:layout_editor_absoluteY="16dp" />
-    </LinearLayout>
+            <ImageButton
+                android:id="@+id/restRhythm"
+                android:layout_width="105dp"
+                android:layout_height="105dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="70dp"
+                android:background="@drawable/restingman" />
 
-</android.support.constraint.ConstraintLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="70dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/faceLearn"
+                    android:layout_width="105dp"
+                    android:layout_height="105dp"
+                    android:layout_gravity="left"
+                    android:layout_marginStart="35dp"
+                    android:background="@drawable/spaces_bird"
+
+                    />
+
+                <ImageButton
+                    android:id="@+id/faceTouch"
+                    android:layout_width="105dp"
+                    android:layout_height="105dp"
+                    android:layout_gravity="right"
+                    android:layout_marginStart="100dp"
+                    android:background="@drawable/baby_bird"
+
+                    />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="100dp"
+                android:layout_marginTop="70dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/egbdfLearn"
+                        android:layout_width="105dp"
+                        android:layout_height="105dp"
+                        android:layout_gravity="left"
+                        android:layout_marginStart="35dp"
+                        android:background="@drawable/lines_bird" />
+
+
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/egbdfTouch"
+                    android:layout_width="105dp"
+                    android:layout_height="105dp"
+                    android:layout_gravity="right"
+                    android:layout_marginStart="100dp"
+                    android:background="@drawable/baby_bird" />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.LinearLayoutCompat>
+
+    </ScrollView>
+
+</android.support.v7.widget.ContentFrameLayout>

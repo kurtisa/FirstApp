@@ -4,24 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:paddingTop="?android:attr/actionBarSize"
     tools:context="com.example.kurtis.firstapp.teacherAddStudentsActivity">
 
-
-    <EditText
-        android:id="@+id/add_student_field"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:hint="Enter student username here" />
-
-    <Button
-        android:id="@+id/add_student_button"
-        android:layout_width="97dp"
-        android:layout_height="wrap_content"
-        android:text="add student!" />
-
-    <ListView
-        android:id="@+id/list"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/my_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></ListView>
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="320dp"
+        android:clickable="true"
+        android:src="@drawable/ic_action_add" />
 
 </LinearLayout>

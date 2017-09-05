@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -28,9 +27,9 @@ import com.google.firebase.database.ValueEventListener;
 public class teacher_main_menu extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    static public String username_string;
     TextView userName;
     TextView task;
-    String username_string;
     private Intent intent;
     private Menu menu;
     private Button buttonAdd;
@@ -46,8 +45,7 @@ public class teacher_main_menu extends AppCompatActivity
         setSupportActionBar(actionBar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        userName = (TextView) findViewById(R.id.userName);
-        task = (TextView) findViewById(R.id.taskToDo);
+
         buttonAdd = (Button) findViewById(R.id.addStudentsCard);
         buttonTasks = (Button) findViewById(R.id.setTasksCard);
         buttonReview = (Button) findViewById(R.id.reviewProgressCard);
@@ -81,20 +79,11 @@ public class teacher_main_menu extends AppCompatActivity
             public void onClick(View v2) {
                 //add intent here
                 // startActivity(login_intent);
+
                 finish();
             }
 
         });
-
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.teacher_drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, actionBar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.teacher_nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
     }
 
@@ -106,7 +95,7 @@ public class teacher_main_menu extends AppCompatActivity
         //TODO retrieve teacher tasks
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String uid = user.getUid();
-        DatabaseReference uidRef = mRootRef.child("users").child(uid).child("username");
+        DatabaseReference uidRef = mRootRef.child("teacher_users").child(uid).child("username");
 
         uidRef.addValueEventListener(new ValueEventListener() {
 
@@ -114,7 +103,6 @@ public class teacher_main_menu extends AppCompatActivity
                 //Log.w("MAIN MENU", (dataSnapshot.getValue(String.class)));
 
                 username_string = dataSnapshot.getValue(String.class);
-
             }
 
 
@@ -152,17 +140,10 @@ public class teacher_main_menu extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_log_student_out) {
             return true;
         }
 
-        if (R.id.action_user_icon == id) {
-            return true;
-        }
-
-        if (R.id.action_trophy_icon == id) {
-            return true;
-        }
         // User chose the "Favorite" action, mark the current item
         // as a favorite...
 
@@ -192,8 +173,7 @@ public class teacher_main_menu extends AppCompatActivity
             // startActivity(intent);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+
         return true;
     }
 
