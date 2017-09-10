@@ -22,11 +22,9 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".MainMenu"
-            android:label="@string/title_activity_main_menu"
             android:theme="@style/StudentAppTheme.NoActionBar" />
         <activity
             android:name=".MainActivity"
@@ -61,8 +59,15 @@
         </activity>
         <activity
             android:name=".teacherAddStudentsActivity"
-            android:theme="@style/TeacherAppThemeAddStudent.NoActionBar" />
-        <activity android:name=".touchQuestions" />
+            android:label="Add Students"
+            android:theme="@style/TeacherAppThemeAddStudent" />
+        <activity
+            android:name=".touchQuestions"
+            android:theme="@style/StudentAppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainMenu" />
+        </activity>
         <activity
             android:name=".rhythmQuestions"
             android:label="@string/app_name"
@@ -77,7 +82,13 @@
         <activity
             android:name=".student_tabs"
             android:label="@string/title_activity_student_tabs"
-            android:theme="@style/StudentAppTheme.NoActionBar"></activity>
+            android:theme="@style/StudentAppTheme.NoActionBar" />
+        <activity
+            android:name=".setTasksActivity"
+            android:label="Set Tasks"
+            android:theme="@style/TeacherAppThemeAddStudent">
+
+        </activity>
     </application>
 
 </manifest>

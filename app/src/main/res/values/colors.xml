@@ -20,5 +20,7 @@
     <color name="colorYellowLight">#FFFF72</color>
     <color name="colorYellowDark">#C8B900</color>
 
+    <color name="colorOrangePrimary">#ffc107</color>
+    <color name="colorOrangeDark">#ff8f00</color>
 
 </resources>

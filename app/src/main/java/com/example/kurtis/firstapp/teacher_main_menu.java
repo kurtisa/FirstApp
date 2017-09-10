@@ -3,10 +3,6 @@ package com.example.kurtis.firstapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -24,8 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class teacher_main_menu extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class teacher_main_menu extends AppCompatActivity {
 
     static public String username_string;
     TextView userName;
@@ -40,10 +35,10 @@ public class teacher_main_menu extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_teacher_main_menu);
+        setContentView(R.layout.app_bar_teacher_main_menu);
         Toolbar actionBar = (Toolbar) findViewById(R.id.teacher_toolbar);
         setSupportActionBar(actionBar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
 
 
         buttonAdd = (Button) findViewById(R.id.addStudentsCard);
@@ -51,6 +46,7 @@ public class teacher_main_menu extends AppCompatActivity
         buttonReview = (Button) findViewById(R.id.reviewProgressCard);
         final Intent login_intent = new Intent(this, LoginActivity.class);
         final Intent teacherAddIntent = new Intent(this, teacherAddStudentsActivity.class);
+        final Intent setTasksIntent = new Intent(this, setTasksActivity.class);
 
 
         buttonAdd.setOnClickListener(new View.OnClickListener() {
@@ -66,10 +62,8 @@ public class teacher_main_menu extends AppCompatActivity
         buttonTasks.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v2) {
                 //add intent here
-                // startActivity(login_intent);
+                startActivity(setTasksIntent);
 
-                FirebaseAuth.getInstance().signOut();
-                startActivity(login_intent);
                 finish();
             }
 
@@ -113,17 +107,6 @@ public class teacher_main_menu extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.teacher_drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         MenuInflater inflater = getMenuInflater();
@@ -149,33 +132,5 @@ public class teacher_main_menu extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.lvl1) {
-            //intent = new Intent(this, MainActivity.class);
-            //   intent.putExtra("LEVEL", "1");
-            //  startActivity(intent);
-        } else if (id == R.id.lvl2) {
-            //   intent = new Intent(this, MainActivity.class);
-            //  intent.putExtra("LEVEL", "2");
-            //   startActivity(intent);
-        } else if (id == R.id.lvl3) {
-            //   intent = new Intent(this, MainActivity.class);
-            //  intent.putExtra("LEVEL", "3");
-            //  startActivity(intent);
-        } else if (id == R.id.lvl4) {
-            //  intent = new Intent(this, MainActivity.class);
-            //  intent.putExtra("LEVEL", "4");
-            // startActivity(intent);
-        }
-
-
-        return true;
-    }
-
 
 }

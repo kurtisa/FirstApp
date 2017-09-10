@@ -1,11 +1,14 @@
 package com.example.kurtis.firstapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,11 +24,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class MainMenu extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+import java.util.ArrayList;
+
+public class MainMenu extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     TextView userName;
     TextView task;
     String username_string;
+    String username;
+    String nickname;
+    String age;
+    DatabaseReference mRootRef;
+    ArrayList<String> teacherlist = new ArrayList();
     private Intent intent;
     private Menu menu;
     private Intent login_intent;
@@ -123,20 +132,22 @@ public class MainMenu extends AppCompatActivity
     @Override
     public void onStart() {
         super.onStart();
-        DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+        mRootRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference taskRef = mRootRef.child("tasks");
         //TODO retrieve teacher tasks
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String uid = user.getUid();
         DatabaseReference uidRef = mRootRef.child("users").child(uid).child("username");
-
+        boolean gotUsername;
+        // Get username, age and nickname
         uidRef.addValueEventListener(new ValueEventListener() {
 
+            // get username
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //Log.w("MAIN MENU", (dataSnapshot.getValue(String.class)));
-
                 username_string = dataSnapshot.getValue(String.class);
-
+                addTeacherListener();
+                Log.d("Username retrived:", username_string);
             }
 
 
@@ -144,9 +155,96 @@ public class MainMenu extends AppCompatActivity
                 //  Log.w("MAIN MENU", "loadPost:onCancelled", databaseError.toException());
             }
         });
+
+    }
+
+    private void addTeacherListener() {
+
+
+        final DatabaseReference studentList = mRootRef.child("student-list").child(username_string);
+        // Check if student's teacher list has changed
+        studentList.addValueEventListener(new ValueEventListener() {
+
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                    // if the student's list of teachers does not contain the teacher, or the teacher username value is false (student hasn't accepted request
+                    if ((Boolean) childDataSnapshot.getValue() && teacherlist.contains(childDataSnapshot.getKey())) {
+                        // if there are teacher's who have been accepted by student; do nothing.
+                    } else if (!(Boolean) childDataSnapshot.getValue()) {
+                        // else ask student for permission
+                        String new_teacher = childDataSnapshot.getKey();
+                        trigger_add_teacher(new_teacher);
+                    } else if ((Boolean) childDataSnapshot.getValue()) {
+                        teacherlist.add(childDataSnapshot.getKey());
+                    }
+                }
+            }
+
+
+            public void onCancelled(DatabaseError databaseError) {
+                //  Log.w("MAIN MENU", "loadPost:onCancelled", databaseError.toException());
+            }
+        });
+
     }
 
 
+    private void trigger_add_teacher(final String teacher_username) {
+        final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        alert.setTitle("A teacher, " + teacher_username + " added you on Thero!");
+
+        alert.setPositiveButton("Accept!", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+
+                // turn teacher username value to true in student's teacher list.
+                DatabaseReference studentList = mRootRef.child("student-list"); //setting up an index of usernames mapped to uid
+                DatabaseReference studentTeacherRef = studentList.child(username_string).child(teacher_username);
+                studentTeacherRef.setValue(true, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        if (databaseError != null) {
+                            Log.d("Data could not be saved ", databaseError.getMessage());
+                        }
+                    }
+                });
+
+                // add student username value to true in teacher's list
+                DatabaseReference teacherListRef = mRootRef.child("teacher-list"); //setting up an index of usernames mapped to uid
+                DatabaseReference teacherStudentRef = teacherListRef.child(teacher_username);
+                teacherStudentRef.child(username_string).setValue(true, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        if (databaseError != null) {
+                            Log.d("Data could not be saved ", databaseError.getMessage());
+                        }
+                    }
+                });
+            }
+
+        });
+
+        alert.setNegativeButton("Ignore", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // remove teacher from the student's list.
+                DatabaseReference studentList = mRootRef.child("student-list"); //setting up an index of usernames mapped to uid
+                DatabaseReference studentTeacherRef = studentList.child(username_string).child(teacher_username);
+                studentTeacherRef.setValue(null, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        if (databaseError != null) {
+                            Log.d("Data could not be saved ", databaseError.getMessage());
+                        }
+                    }
+                });
+
+            }
+        });
+        teacherlist.add(teacher_username);
+        alert.show();
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

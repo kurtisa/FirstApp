@@ -1,25 +1,25 @@
 package com.example.kurtis.firstapp;
 
-import android.app.LoaderManager;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.Loader;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,12 +33,14 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class teacherAddStudentsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class teacherAddStudentsActivity extends AppCompatActivity {
     // Array of strings...
 
-    ArrayList<String> mobileArray = new ArrayList<>();
+    ArrayList<String> students = new ArrayList<>();
     ArrayList<Boolean> boolArray = new ArrayList<>();
-    EditText mUsernameView;
+    ArrayList<String> mobileArray = new ArrayList<>();
+
+    AutoCompleteTextView mUsernameView;
     //TODO research cursorloader. Also implement the login activity methods for entering a new user.
     private Menu menu;
     private RecyclerView listView;
@@ -49,11 +51,13 @@ public class teacherAddStudentsActivity extends AppCompatActivity implements Loa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.app_bar_teacher_add_students);
+        setContentView(R.layout.activity_teacher_add_students);
 
-        Toolbar actionBar = (Toolbar) findViewById(R.id.add_students_teacher_toolbar);
-        setSupportActionBar(actionBar);
-        getSupportActionBar().setTitle(null);
+        //  Toolbar actionBar = (Toolbar) findViewById(R.id.add_students_teacher_toolbar);
+        // setSupportActionBar(actionBar);
+        getSupportActionBar().setTitle("Add Students");
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -76,6 +80,8 @@ public class teacherAddStudentsActivity extends AppCompatActivity implements Loa
 
             @Override
             public boolean isLongPressDragEnabled() {
+
+
                 return true;
             }
 
@@ -85,11 +91,7 @@ public class teacherAddStudentsActivity extends AppCompatActivity implements Loa
                 if (direction == ItemTouchHelper.LEFT) {
                     int position = viewHolder.getAdapterPosition();
                     String key = mobileArray.get(position);
-                    DatabaseReference mRef = mRootRef.child("teacher-list").child(teacher_main_menu.username_string);
-                    mRef.child(key).setValue(null);
-
-                    mobileArray.remove(position);
-                    boolArray.remove(position);
+                    areYouSure(key, position);
                 }
             }
         });
@@ -107,13 +109,49 @@ public class teacherAddStudentsActivity extends AppCompatActivity implements Loa
 
     }
 
+
+    public void areYouSure(final String username, final int position) {
+        final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        alert.setTitle("Are you sure you wish to delete " + username + "?");
+
+        // Set an EditText view to get user input
+        TextView areYouSure = new TextView(this);
+        alert.setView(areYouSure);
+
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+
+                DatabaseReference mRef = mRootRef.child("teacher-list").child(teacher_main_menu.username_string);
+                mRef.child(username).setValue(null);
+
+                mobileArray.remove(position);
+                boolArray.remove(position);
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                changeData(mobileArray, boolArray);
+            }
+        });
+
+        alert.show();
+
+    }
+
     public void triggerAlert() {
         final AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
         alert.setTitle("Enter Student Username");
 
         // Set an EditText view to get user input
-        mUsernameView = new EditText(this);
+        mUsernameView = new AutoCompleteTextView(this);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.simple_dropdown, students.toArray((new String[students.size()])));
+        mUsernameView.setAdapter(adapter);
+        mUsernameView.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+
         alert.setView(mUsernameView);
 
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -165,21 +203,34 @@ public class teacherAddStudentsActivity extends AppCompatActivity implements Loa
             triggerAlert();
 
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
+            // Adding student to teacher's list of students
             final String new_student_username = mUsernameView.getText().toString();
             DatabaseReference userTypeRef = mRootRef.child("teacher-list"); //setting up an index of usernames mapped to uid
-            DatabaseReference teacherStudentRef = userTypeRef.child(teacher_main_menu.username_string); //TODO change to teacher username
+            DatabaseReference teacherStudentRef = userTypeRef.child(teacher_main_menu.username_string);
             boolArray.clear();
-            teacherStudentRef.child(new_student_username).setValue(false, new DatabaseReference.CompletionListener() { //TODO change to student username
+            teacherStudentRef.child(new_student_username).setValue(false, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                     if (databaseError != null) {
                         Log.d("Data could not be saved ", databaseError.getMessage());
                     }
                 }
-
             });
+            // Adding teacher to student's list of students
+            DatabaseReference studentList = mRootRef.child("student-list"); //setting up an index of usernames mapped to uid
+            DatabaseReference studentTeacherRef = studentList.child(new_student_username);
+            studentTeacherRef.child(teacher_main_menu.username_string).setValue(false, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        Log.d("Data could not be saved ", databaseError.getMessage());
+                    }
+                }
+            });
+
+
+
+
         }
     }
 
@@ -215,23 +266,31 @@ public class teacherAddStudentsActivity extends AppCompatActivity implements Loa
             }
         });
 
+        //retrieve entire list of students
+        DatabaseReference studentUsernameList = mRootRef.child("student_users");
+        studentUsernameList.addValueEventListener(new ValueEventListener() {
+
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                    if (students.contains(childDataSnapshot.getKey())) {
+                        // do nothing
+                    } else {
+                        students.add(childDataSnapshot.getKey());
+                    }
+                }
+            }
+
+            public void onCancelled(DatabaseError databaseError) {
+                //  Log.w("MAIN MENU", "loadPost:onCancelled", databaseError.toException());
+            }
+        });
+
     }
 
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return null;
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-
-    }
 
     public void changeData(ArrayList mobileArray, ArrayList boolArray) {
         mAdapter = new MyAdapter(mobileArray, boolArray);

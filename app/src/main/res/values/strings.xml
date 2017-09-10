@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Note </string>
+    <string name="app_name">Thero </string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_main_menu">MusicT Student</string>
 
@@ -124,5 +124,15 @@
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_student_tabs">student_tabs</string>
     <string name="section_format">Hello World from section: %1$d</string>
+
+    <string-array name="tasks_array">
+        <item>Select level</item>
+        <item>Level 1: Rhythm note names</item>
+        <item>Level 2: Rhythm rest names</item>
+        <item>Level 3: Treble Clef notes in the spaces (multi-choice)</item>
+        <item>Level 4: Treble Clef notes on the spaces (touch)</item>
+        <item>Level 5: Treble Clef notes on the lines (multi-choice)</item>
+        <item>Level 6: Treble Clef notes on the lines (touch)</item>
+    </string-array>
 </resources>
 

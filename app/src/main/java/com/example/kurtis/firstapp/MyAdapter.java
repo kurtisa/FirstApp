@@ -53,7 +53,7 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         mTextView.setText(mDataset[position]);
 
         if (mPaired[position]) {
-            mImageView.setImageResource(R.drawable.ic_stat_name);
+            mImageView.setImageResource(R.drawable.ic_action_student);
         } else {
             mImageView.setImageResource(R.drawable.ic_not_paired);
 

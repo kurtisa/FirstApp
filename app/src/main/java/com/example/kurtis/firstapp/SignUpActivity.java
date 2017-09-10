@@ -511,10 +511,23 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                 }
             });
 
-            DatabaseReference userTypeRef = mRootRef.child("userType"); //setting up an index of usernames mapped to uid
+            DatabaseReference userTypeRef = mRootRef.child("student_users"); //setting up an index of usernames mapped to uid
             DatabaseReference teacherStudentRef = userTypeRef.child(uid);
 
             teacherStudentRef.child("type").setValue("student", new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        databaseWriteError = ("Data could not be saved " + databaseError.getMessage());
+                        success = false;
+                    }
+                }
+            });
+
+
+            DatabaseReference studentUsersRef = mRootRef.child("student_users"); //setting up an index of usernames mapped to uid
+
+            studentUsersRef.child(mUsername).setValue(true, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                     if (databaseError != null) {
