@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         }
         level = getIntent().getStringExtra("LEVEL");
 
-        if ((Objects.equals(level, "1") | Objects.equals(level, "2"))) {
+        if ((Objects.equals(level, "1") | Objects.equals(level, "2" )| Objects.equals(level, "10"))) {
             trebleClef = true;
             Log.d("IF STATEMENT", "trebleClef set to true");
         } else {
