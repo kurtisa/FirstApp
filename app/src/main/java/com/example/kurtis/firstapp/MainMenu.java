@@ -310,6 +310,14 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
             intent = new Intent(this, touchQuestions.class);
             intent.putExtra("LEVEL", "7");
             startActivity(intent);
+        }else if (id == R.id.lvl10) {
+            intent = new Intent(this, MainActivity.class);
+            intent.putExtra("LEVEL", "10");
+            startActivity(intent);
+        }else if (id == R.id.lvl11) {
+        intent = new Intent(this, MainActivity.class);
+        intent.putExtra("LEVEL", "11");
+        startActivity(intent);
         }
         return true;
     }

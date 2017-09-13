@@ -4,10 +4,10 @@ VF = Vex.Flow;
 
 var level
 level = android.javaScriptGetLevel();
-if (level == '1'){
+if (level == '1' | level == '10'){
 min = Math.ceil(0);
 max = Math.floor(4);
-} else if (level == '2'){
+} else if (level == '2' | level == '11'){
 min = Math.ceil(0);
 max = Math.floor(3);
 } else{
