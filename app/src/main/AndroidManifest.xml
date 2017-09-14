@@ -86,9 +86,11 @@
         <activity
             android:name=".setTasksActivity"
             android:label="Set Tasks"
-            android:theme="@style/TeacherAppThemeAddStudent">
-
-        </activity>
+            android:theme="@style/TeacherAppThemeAddStudent"></activity>
+        <activity
+            android:name=".ReviewProgressActivity"
+            android:label="@string/title_activity_review_progress"
+            android:theme="@style/TeacherAppThemeAddStudent"></activity>
     </application>
 
 </manifest>

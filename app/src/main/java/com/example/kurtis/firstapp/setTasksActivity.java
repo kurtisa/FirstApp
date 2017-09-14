@@ -61,6 +61,9 @@ public class setTasksActivity extends AppCompatActivity implements AdapterView.O
     private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     private boolean toggleFlag;
     private ToggleButton toggle;
+    private TextView text2;
+    private TextView options_title;
+
 
     public static void setDueDate(int d, int m, int y) {
         day = d;
@@ -84,6 +87,7 @@ public class setTasksActivity extends AppCompatActivity implements AdapterView.O
         mAdapter = new SetTasksAdapter(mobileArray, boolArray);
         listView = (RecyclerView) findViewById(R.id.studentCheckboxList);
         options = (Spinner) findViewById(R.id.taskSpinner);
+        options_title = (TextView) findViewById(R.id.option_title);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.tasks_array, R.layout.simple_dropdown);
@@ -101,19 +105,16 @@ public class setTasksActivity extends AppCompatActivity implements AdapterView.O
 
 
         repeats = (EditText) findViewById(R.id.repeats);
-        final TextView text1 = (TextView) findViewById(R.id.repeatText);
-        final TextView text2 = (TextView) findViewById(R.id.timesText);
+        text2 = (TextView) findViewById(R.id.timesText);
         toggle = (ToggleButton) findViewById(R.id.unlockLevel);
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     repeats.setVisibility(View.INVISIBLE);
-                    text1.setVisibility(View.INVISIBLE);
                     text2.setVisibility(View.INVISIBLE);
                     toggleFlag = true;
                 } else {
                     repeats.setVisibility(View.VISIBLE);
-                    text1.setVisibility(View.VISIBLE);
                     text2.setVisibility(View.VISIBLE);
                     toggleFlag = false;
                 }
@@ -165,25 +166,56 @@ public class setTasksActivity extends AppCompatActivity implements AdapterView.O
     }
 
     private void attemptTaskSet() {
+
+        setDueDateButton.setError(null);
+
         for (String student : studentCheckedList) {
-            Log.d("Students checked", student);
+
+            String optionsSetting = (String) toggle.getText();
+            String numRepeats = String.valueOf(repeats.getText());
+
+            DatabaseReference userTypeRef = mRootRef.child("student-tasks"); //setting up an index of usernames mapped to uid
+            DatabaseReference teacherStudentRef = userTypeRef.child(student); //TODO change to teacher username
+
+            teacherStudentRef.child(teacher_main_menu.username_string).child(options.getSelectedItem().toString()).child(optionsSetting).setValue(numRepeats, new DatabaseReference.CompletionListener() { //TODO change to student username
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        Log.d("Data could not be saved ", databaseError.getMessage());
+                    }
+                }
+
+            });
+
+            teacherStudentRef.child(teacher_main_menu.username_string).child(options.getSelectedItem().toString()).child("Due Date").setValue(setDueDateButton.getText(), new DatabaseReference.CompletionListener() { //TODO change to student username
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        Log.d("Data could not be saved ", databaseError.getMessage());
+                    }
+                }
+            });
+            triggerAlert();
         }
     }
 
     public void triggerAlert() {
+        final Intent refresh = new Intent(this, teacher_main_menu.class);
         final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Enter Student Username");
+        alert.setTitle("Tasks added successfully!");
         // Set an EditText view to get user input
-        mUsernameView = new EditText(this);
-        alert.setView(mUsernameView);
-        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+
+        alert.setPositiveButton("Return to main menu", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {
-                attemptAdd(mUsernameView, alert);
+                startActivity(refresh);//Start the same Activity
+                finish(); //finish Activity.
             }
         });
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        alert.setNegativeButton("Set another task", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
+                finish();
+                startActivity(getIntent());
             }
         });
         alert.show();
@@ -324,21 +356,40 @@ public class setTasksActivity extends AppCompatActivity implements AdapterView.O
         switch (pos) {
 
             case 0: {
+                Log.d("HERE", "SHOULD BE GONE");
+                preview.setVisibility(View.GONE);
+                explaination.setVisibility(View.GONE);
+                text2.setVisibility(View.GONE);
 
+                options_title.setVisibility(View.GONE);
+                setDueDateButton.setVisibility(View.GONE);
+                toggle.setVisibility(View.GONE);
                 preview.setImageDrawable(null);
                 explaination.setText(null);
-                //preview.setVisibility(View.INVISIBLE);
-                // explaination.setVisibility(View.INVISIBLE);
                 toggle.setChecked(true);
-
+                break;
             }
 
             case 1: {
+                Log.d("HERE", "FUCK YOU");
+                setDueDateButton.setVisibility(View.VISIBLE);
+                toggle.setVisibility(View.VISIBLE);
+                options_title.setVisibility(View.VISIBLE);
+                preview.setVisibility(View.VISIBLE);
+                explaination.setVisibility(View.VISIBLE);
                 preview.setImageDrawable(getDrawable(R.drawable.rhythm_preview));
+                toggle.setChecked(true);
                 explaination.setText("10 multi-choice questions where students either a Semibreve, Minim, Crotchet or Quaver will be shown. Students select the correct option out of three suggestions.");
                 break;
             }
             case 2: {
+
+                setDueDateButton.setVisibility(View.VISIBLE);
+                toggle.setVisibility(View.VISIBLE);
+                options_title.setVisibility(View.VISIBLE);
+                preview.setVisibility(View.VISIBLE);
+                explaination.setVisibility(View.VISIBLE);
+                toggle.setChecked(true);
                 preview.setImageDrawable(getDrawable(R.drawable.rest_preview));
                 explaination.setText("10 multi-choice questions of a Semibreve, Minim, Crotchet or Quaver rest. Students " +
                         "select the correct option out of three suggestions.");
@@ -346,23 +397,50 @@ public class setTasksActivity extends AppCompatActivity implements AdapterView.O
 
             }
             case 3: {
+                options_title.setVisibility(View.VISIBLE);
+
+                setDueDateButton.setVisibility(View.VISIBLE);
+                toggle.setVisibility(View.VISIBLE);
+                preview.setVisibility(View.VISIBLE);
+                explaination.setVisibility(View.VISIBLE);
+                toggle.setChecked(true);
                 preview.setImageDrawable(getDrawable(R.drawable.notes_spaces_preview));
                 explaination.setText("10 multi-choice questions of notes in the spaces.(Treble Clef) Students " +
                         "select the correct option out of three suggestions.");
                 break;
             }
             case 4: {
+                options_title.setVisibility(View.VISIBLE);
+
+                setDueDateButton.setVisibility(View.VISIBLE);
+                toggle.setVisibility(View.VISIBLE);
+                preview.setVisibility(View.VISIBLE);
+                explaination.setVisibility(View.VISIBLE);
+                toggle.setChecked(true);
                 preview.setImageDrawable(getDrawable(R.drawable.notes_spaces_touch_preview));
                 explaination.setText("10 touch questions of notes in the spaces (Treble Clef). Students will be prompted to find a F, A, C or E note on the stave.");
                 break;
             }
             case 5: {
+                options_title.setVisibility(View.VISIBLE);
+
+                setDueDateButton.setVisibility(View.VISIBLE);
+                toggle.setVisibility(View.VISIBLE);
+                preview.setVisibility(View.VISIBLE);
+                explaination.setVisibility(View.VISIBLE);
+                toggle.setChecked(true);
                 preview.setImageDrawable(getDrawable(R.drawable.notes_preview));
                 explaination.setText("10 multi-choice questions of notes on the lines.(Treble Clef) Students " +
                         "select the correct option out of three suggestions.");
                 break;
             }
             case 6: {
+                options_title.setVisibility(View.VISIBLE);
+                setDueDateButton.setVisibility(View.VISIBLE);
+                toggle.setVisibility(View.VISIBLE);
+                preview.setVisibility(View.VISIBLE);
+                explaination.setVisibility(View.VISIBLE);
+                toggle.setChecked(true);
                 preview.setImageDrawable(getDrawable(R.drawable.touch_preview));
                 explaination.setText("10 touch questions of notes on the lines (Treble Clef). Students will be prompted to find an E, G, B, D, or F note on the stave.");
                 break;

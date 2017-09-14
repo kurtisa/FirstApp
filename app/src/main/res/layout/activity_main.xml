@@ -8,10 +8,18 @@
     android:background="#FFFFFF"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="60dp"
+    android:padding="40dp"
     android:weightSum="2"
     tools:context="com.example.kurtis.firstapp.MainActivity">
 
+    <TextView
+        android:id="@+id/percentageDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center_horizontal"
+        android:text="100%"
+        android:textSize="38dp" />
 
     <FrameLayout
         android:layout_width="289dp"

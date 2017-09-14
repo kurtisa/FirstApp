@@ -3,8 +3,6 @@ package com.example.kurtis.firstapp;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -26,7 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class MainMenu extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainMenu extends AppCompatActivity {
     TextView userName;
     TextView task;
     String username_string;
@@ -278,49 +276,4 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
 
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.lvl1) {
-
-        } else if (id == R.id.lvl2) {
-            intent = new Intent(this, MainActivity.class);
-            intent.putExtra("LEVEL", "2");
-            startActivity(intent);
-        } else if (id == R.id.lvl3) {
-            intent = new Intent(this, MainActivity.class);
-            intent.putExtra("LEVEL", "3");
-            startActivity(intent);
-        } else if (id == R.id.lvl4) {
-            intent = new Intent(this, MainActivity.class);
-            intent.putExtra("LEVEL", "4");
-            startActivity(intent);
-        } else if (id == R.id.lvl5) {
-            intent = new Intent(this, touchQuestions.class);
-            intent.putExtra("LEVEL", "5");
-            startActivity(intent);
-        } else if (id == R.id.lvl6) {
-            intent = new Intent(this, touchQuestions.class);
-            intent.putExtra("LEVEL", "6");
-            startActivity(intent);
-        } else if (id == R.id.lvl7) {
-            intent = new Intent(this, touchQuestions.class);
-            intent.putExtra("LEVEL", "7");
-            startActivity(intent);
-        }else if (id == R.id.lvl10) {
-            intent = new Intent(this, MainActivity.class);
-            intent.putExtra("LEVEL", "10");
-            startActivity(intent);
-        }else if (id == R.id.lvl11) {
-        intent = new Intent(this, MainActivity.class);
-        intent.putExtra("LEVEL", "11");
-        startActivity(intent);
-        }
-        return true;
-    }
-
-
 }

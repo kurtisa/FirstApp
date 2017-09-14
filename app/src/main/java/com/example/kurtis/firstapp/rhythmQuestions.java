@@ -1,6 +1,7 @@
 package com.example.kurtis.firstapp;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -41,6 +43,7 @@ public class rhythmQuestions extends AppCompatActivity {
     DatabaseReference mRootRef;
     FirebaseUser user;
     String uid;
+    TextView percentageCorrect;
     private ProgressBar progressBar;
     private WebView wv1;
     private Button button1;
@@ -107,7 +110,9 @@ public class rhythmQuestions extends AppCompatActivity {
         //webSettings.setSupportZoom(true);
         webSettings.setDefaultTextEncodingName("utf-8");
         webSettings.setDomStorageEnabled(true);
-
+        percentageCorrect = (TextView) findViewById(R.id.percentageDisplay);
+        percentageCorrect.setText("100%");
+        percentageCorrect.setTextColor(Color.GREEN);
         //wv1.loadUrl("http://beta.html5test.com/");
         wv1.setScrollContainer(false);
         wv1.setVerticalScrollBarEnabled(false);
@@ -138,14 +143,16 @@ public class rhythmQuestions extends AppCompatActivity {
                 question_attempts += 1;
                 if (rightAnswer == 1) {
                     question_num += 1;
+                    updatePercentage(question_attempts, question_num, percentageCorrect);
                     updateProgress(button1);
-                    if (question_num == 10) {
+                    if (question_num == 21) {
                         finish_activity();
                     }
                     wv1.reload();
                     delayButtons();
                 } else {
                     wrongAnswer(button1);
+                    updatePercentage(question_attempts, question_num, percentageCorrect);
                 }
 
 
@@ -156,14 +163,16 @@ public class rhythmQuestions extends AppCompatActivity {
                 question_attempts += 1;
                 if (rightAnswer == 2) {
                     question_num += 1;
+                    updatePercentage(question_attempts, question_num, percentageCorrect);
                     updateProgress(button2);
-                    if (question_num == 10) {
+                    if (question_num == 21) {
                         finish_activity();
                     }
                     wv1.reload();
                     delayButtons();
                 } else {
                     wrongAnswer(button2);
+                    updatePercentage(question_attempts, question_num, percentageCorrect);
                 }
 
 
@@ -175,14 +184,16 @@ public class rhythmQuestions extends AppCompatActivity {
                 question_attempts += 1;
                 if (rightAnswer == 3) {
                     question_num += 1;
+                    updatePercentage(question_attempts, question_num, percentageCorrect);
                     updateProgress(button3);
-                    if (question_num == 10) {
+                    if (question_num == 21) {
                         finish_activity();
                     }
                     wv1.reload();
                     delayButtons();
                 } else {
                     wrongAnswer(button3);
+                    updatePercentage(question_attempts, question_num, percentageCorrect);
                 }
 
             }
@@ -192,6 +203,24 @@ public class rhythmQuestions extends AppCompatActivity {
     }
 
 
+    private void updatePercentage(int question_attempts, int question_num, TextView percentageCorrect) {
+
+        Log.d("num", Integer.toString(question_num));
+        Log.d("attempts", Integer.toString(question_attempts));
+
+        float percentage = (float) (question_num - 1) / question_attempts;
+        int percent = (int) (percentage * 100);
+        Log.d("percent", Integer.toString(percent));
+        percentageCorrect.setText(Integer.toString(percent) + "%");
+
+        if (percent >= 80) {
+            percentageCorrect.setTextColor(Color.GREEN);
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                percentageCorrect.setTextColor(getResources().getColor(R.color.colorOrangePrimary, getTheme()));
+            }
+        }
+    }
     public void finish_activity() {
 
         if (!logged_out) {
@@ -230,7 +259,7 @@ public class rhythmQuestions extends AppCompatActivity {
     }
 
     private void updateProgress(Button button) {
-        int progress = question_num * 10;
+        int progress = question_num * 5;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             progressBar.setProgress(progress, true);
         }

@@ -7,7 +7,7 @@ abstract class variableListener {
     public abstract void OnMyBooleanChanged();
 
     public static class Connect {
-        public static boolean myBoolean = false;
+        public static boolean myBoolean = true;
         private static List<variableListener> listeners = new ArrayList<variableListener>();
 
         public static boolean getMyBoolean() {
@@ -16,7 +16,6 @@ abstract class variableListener {
 
         public static void setMyBoolean(boolean value) {
             myBoolean = value;
-
             for (variableListener l : listeners) {
                 l.OnMyBooleanChanged();
             }

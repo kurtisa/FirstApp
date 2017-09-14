@@ -1,5 +1,6 @@
 package com.example.kurtis.firstapp;
 
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference mRootRef;
     FirebaseUser user;
     String uid;
+    TextView percentageCorrect;
     private boolean flag = true;
     private WebView wv1;
     private Button button1;
@@ -70,6 +73,11 @@ public class MainActivity extends AppCompatActivity {
             trebleClef = false;
             Log.d("IF STATEMENT", "trebleClef set to false");
         }
+
+
+        percentageCorrect = (TextView) findViewById(R.id.percentageDisplay);
+        percentageCorrect.setText("100%");
+        percentageCorrect.setTextColor(Color.GREEN);
 
         question_num = 1;
         super.onCreate(savedInstanceState);
@@ -129,12 +137,13 @@ public class MainActivity extends AppCompatActivity {
                 if (rightAnswer == 1) {
                     question_num += 1;
                     updateProgress(button1);
-
-                    if (question_num == 10) {
+                    updatePercentage(question_attempts, question_num, percentageCorrect);
+                    if (question_num == 21) {
                         finish_activity();
                     }
                     delayButtons();
                 } else {
+                    updatePercentage(question_attempts, question_num, percentageCorrect);
                     wrongAnswer(button1);
                 }
 
@@ -146,14 +155,17 @@ public class MainActivity extends AppCompatActivity {
                 question_attempts += 1;
                 if (rightAnswer == 2) {
                     question_num += 1;
+                    updatePercentage(question_attempts, question_num, percentageCorrect);
                     updateProgress(button2);
-                    if (question_num == 10) {
+                    if (question_num == 21) {
                         finish_activity();
                     }
                     delayButtons();
 
                 } else {
+                    updatePercentage(question_attempts, question_num, percentageCorrect);
                     wrongAnswer(button2);
+
                 }
 
 
@@ -165,18 +177,18 @@ public class MainActivity extends AppCompatActivity {
                 question_attempts += 1;
                 if (rightAnswer == 3) {
                     question_num += 1;
+                    updatePercentage(question_attempts, question_num, percentageCorrect);
                     updateProgress(button3);
-                    if (question_num == 10) {
+                    if (question_num == 21) {
                         finish_activity();
                     }
                     delayButtons();
                 } else {
+                    updatePercentage(question_attempts, question_num, percentageCorrect);
                     wrongAnswer(button3);
                 }
             }
         });
-
-
     }
 
     private void wrongAnswer(Button button) {
@@ -187,8 +199,27 @@ public class MainActivity extends AppCompatActivity {
                 .playOn(button);
     }
 
+
+    private void updatePercentage(int question_attempts, int question_num, TextView percentageCorrect) {
+
+        Log.d("num", Integer.toString(question_num));
+        Log.d("attempts", Integer.toString(question_attempts));
+
+        float percentage = (float) (question_num - 1) / question_attempts;
+        int percent = (int) (percentage * 100);
+        Log.d("percent", Integer.toString(percent));
+        percentageCorrect.setText(Integer.toString(percent) + "%");
+
+        if (percent >= 80) {
+            percentageCorrect.setTextColor(Color.GREEN);
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                percentageCorrect.setTextColor(getResources().getColor(R.color.colorOrangePrimary, getTheme()));
+            }
+        }
+    }
     private void updateProgress(Button button) {
-        int progress = question_num * 10;
+        int progress = question_num * 5;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             progressBar.setProgress(progress, true);
         }

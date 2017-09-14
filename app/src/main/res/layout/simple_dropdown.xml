@@ -7,4 +7,5 @@
     android:dropDownHeight="25dp"
     android:dropDownSelector="@color/colorAccentPrimary"
     android:orientation="vertical"
-    android:textSize="20dp"></TextView>
+    android:textAlignment="center"
+    android:textSize="25dp"></TextView>

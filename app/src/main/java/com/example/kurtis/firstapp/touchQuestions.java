@@ -1,5 +1,6 @@
 package com.example.kurtis.firstapp;
 
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
@@ -49,6 +50,7 @@ public class touchQuestions extends AppCompatActivity {
     public int rightAnswer;
     public int QuestionNum = 1;
     public long t1;
+    TextView percentageCorrect;
     ProgressBar progressBar;
     Button button1;
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
@@ -82,18 +84,21 @@ public class touchQuestions extends AppCompatActivity {
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setLoadWithOverviewMode(true);
-
+        percentageCorrect = (TextView) findViewById(R.id.percentageDisplay);
+        percentageCorrect.setText("100%");
+        percentageCorrect.setTextColor(Color.GREEN);
         webview_touch.loadDataWithBaseURL("file:///android_asset/", touchquestions, "text/html", "utf-8", null);
         updateQuestionText();
         progressBar = (ProgressBar) findViewById(R.id.touchDeterminateBar);
         button1 = (Button) findViewById(R.id.touchQuestions);
-
+        final boolean[] fromHere = {false};
         variableListener.Connect.addMyBooleanListener(new variableListener() {
             @Override
             public void OnMyBooleanChanged() {
                 if (Connect.getMyBoolean()) {
                     Log.d("IF STATEMENT", "hey");
                     question_num++;
+                    question_attempts++;
                     int progress = question_num * 10;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         progressBar.setProgress(progress, true);
@@ -106,10 +111,18 @@ public class touchQuestions extends AppCompatActivity {
                             .playOn(button1);
                     button1.getBackground().setColorFilter(0xFF00FF00, PorterDuff.Mode.MULTIPLY);
                     button1.setText("Press here to continue!");
+                    updatePercentage(question_attempts, question_num, percentageCorrect);
+                    fromHere[0] = true;
                     Connect.setMyBoolean(false);
                     //finish();
                 } else {
-                    // do nothing
+                    if (!fromHere[0]) {
+                        question_attempts = question_attempts + 1;
+                        updatePercentage(question_attempts, question_num, percentageCorrect);
+                    } else {
+                        // do nothing
+                        fromHere[0] = false;
+                    }
                 }
 
             }
@@ -121,11 +134,10 @@ public class touchQuestions extends AppCompatActivity {
         button1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v2) {
                 if (button1.getText() == "Press here to continue!") {
-                    webview_touch.reload();
-
-                    if (question_num == 10) {
+                    if (question_num == 11) {
                         finish();
                     }
+                    webview_touch.reload();
                     YoYo.with(Techniques.Tada)
                             .duration(1300)
                             .playOn(button1);
@@ -171,5 +183,24 @@ public class touchQuestions extends AppCompatActivity {
         button1.getBackground().setColorFilter(0xFF00FF00, PorterDuff.Mode.MULTIPLY);
     }
 
+
+    private void updatePercentage(int question_attempts, int question_num, TextView percentageCorrect) {
+
+        Log.d("num", Integer.toString(question_num));
+        Log.d("attempts", Integer.toString(question_attempts));
+
+        float percentage = (float) (question_num - 1) / question_attempts;
+        int percent = (int) (percentage * 100);
+        Log.d("percent", Integer.toString(percent));
+        percentageCorrect.setText(Integer.toString(percent) + "%");
+
+        if (percent >= 80) {
+            percentageCorrect.setTextColor(Color.GREEN);
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                percentageCorrect.setTextColor(getResources().getColor(R.color.colorOrangePrimary, getTheme()));
+            }
+        }
+    }
 
 }

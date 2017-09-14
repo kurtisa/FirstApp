@@ -47,6 +47,7 @@ public class teacher_main_menu extends AppCompatActivity {
         final Intent login_intent = new Intent(this, LoginActivity.class);
         final Intent teacherAddIntent = new Intent(this, teacherAddStudentsActivity.class);
         final Intent setTasksIntent = new Intent(this, setTasksActivity.class);
+        final Intent reviewProgressIntent = new Intent(this, ReviewProgressActivity.class);
 
 
         buttonAdd.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +73,7 @@ public class teacher_main_menu extends AppCompatActivity {
         buttonReview.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v2) {
                 //add intent here
-                // startActivity(login_intent);
+                startActivity(reviewProgressIntent);
 
                 finish();
             }

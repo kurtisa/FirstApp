@@ -342,14 +342,13 @@ var tickContext = new Vex.Flow.TickContext();
 
 
 function setWrong(group) {
+        android.javaScriptCorrectAnswer("false");
         group.classList.add('scroll');
      //   group.classList.add('fadeOut');
         const box = group.getBoundingClientRect();
         group.classList.add('scrolling');
-        wrong = wrong + 1;
 }
 
 function setCorrect(group){
         android.javaScriptCorrectAnswer(true);
-
 }

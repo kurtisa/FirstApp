@@ -134,5 +134,6 @@
         <item>Level 5: Treble Clef notes on the lines (multi-choice)</item>
         <item>Level 6: Treble Clef notes on the lines (touch)</item>
     </string-array>
+    <string name="title_activity_review_progress">ReviewProgressActivity</string>
 </resources>
 

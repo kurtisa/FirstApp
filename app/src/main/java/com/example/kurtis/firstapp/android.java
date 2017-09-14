@@ -213,8 +213,12 @@ public class android extends touchQuestions {
 
     @JavascriptInterface
     public void javaScriptCorrectAnswer(String correct) {
-        variableListener.Connect.setMyBoolean(true);
-        Log.d("android.java", correct);
+        if (correct.equals("true")) {
+            variableListener.Connect.setMyBoolean(true);
+        } else {
+            Log.d("HEY", "MY BOOLEAN CHANGED YO");
+            variableListener.Connect.setMyBoolean(false);
+        }
     }
 }
 

@@ -511,7 +511,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                 }
             });
 
-            DatabaseReference userTypeRef = mRootRef.child("student_users"); //setting up an index of usernames mapped to uid
+            DatabaseReference userTypeRef = mRootRef.child("userType"); //setting up an index of usernames mapped to uid
             DatabaseReference teacherStudentRef = userTypeRef.child(uid);
 
             teacherStudentRef.child("type").setValue("student", new DatabaseReference.CompletionListener() {
