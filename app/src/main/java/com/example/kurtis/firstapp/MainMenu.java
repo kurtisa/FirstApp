@@ -64,7 +64,10 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
         ImageButton faceTouch = (ImageButton) findViewById(R.id.faceTouch);
         ImageButton egbdfLearn = (ImageButton) findViewById(R.id.egbdfLearn);
         ImageButton egbdfTouch = (ImageButton) findViewById(R.id.egbdfTouch);
-
+        ImageButton acegLearn = (ImageButton) findViewById(R.id.acegLearn);
+        ImageButton gbdfaLearn = (ImageButton) findViewById(R.id.gbdfaLearn);
+        ImageButton acegTouch = (ImageButton) findViewById(R.id.acegTouch);
+        ImageButton gbdfaTouch = (ImageButton) findViewById(R.id.gbdfaTouch);
 
         final Intent login_intent = new Intent(this, LoginActivity.class);
         final Intent teacherAddIntent = new Intent(this, teacherAddStudentsActivity.class);
@@ -123,6 +126,39 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
             public void onClick(View v2) {
                 egbdfTouchIntent.putExtra("LEVEL", "5");
                 startActivity(egbdfTouchIntent);
+            }
+        });
+        final Intent gbdfaLearnIntent = new Intent(this, MainActivity.class);
+
+        gbdfaLearn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v2) {
+                gbdfaLearnIntent.putExtra("LEVEL", "10");
+                startActivity(gbdfaLearnIntent);
+            }
+        });
+        final Intent gbdfaTouchIntent = new Intent(this, touchQuestions.class);
+
+        gbdfaTouch.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v2) {
+                gbdfaTouchIntent.putExtra("LEVEL", "12");
+                startActivity(gbdfaTouchIntent);
+            }
+        });
+        final Intent acegLearnIntent = new Intent(this, MainActivity.class);
+
+        acegLearn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v2) {
+                acegLearnIntent.putExtra("LEVEL", "11");
+                startActivity(acegLearnIntent);
+            }
+
+        });
+        final Intent acegTouchIntent = new Intent(this, touchQuestions.class);
+
+        acegTouch.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v2) {
+                acegTouchIntent.putExtra("LEVEL", "13");
+                startActivity(acegTouchIntent);
             }
         });
 
