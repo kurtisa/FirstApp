@@ -468,10 +468,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                         if (holder.equals("student")) {
                             startActivity(intent);
-                            finish();
+
                         } else if (holder.equals("teacher")) {
                             startActivity(teacherIntent);
-                            finish();
+
                         } else {
                             Log.d("Login", "couldn't find user");
                         }

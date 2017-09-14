@@ -3,7 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.kurtis.firstapp.MainActivity">
 
-
+    <item
+        android:id="@+id/assignments"
+        android:icon="@drawable/ic_supervisor_account_white_24dp"
+        android:title="Task List"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_action_settings"

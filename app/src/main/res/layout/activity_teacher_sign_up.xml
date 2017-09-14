@@ -90,11 +90,12 @@
 
             <Button
                 android:id="@+id/teacher_sign_up_button"
-                style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:background="@color/colorBluePrimary"
                 android:text="@string/title_activity_teacher_sign_up"
+                android:textColor="@color/common_google_signin_btn_text_dark_pressed"
                 android:textStyle="bold" />
 
         </LinearLayout>

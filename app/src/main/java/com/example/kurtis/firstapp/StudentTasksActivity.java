@@ -1,5 +1,6 @@
 package com.example.kurtis.firstapp;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class ReviewProgressActivity extends AppCompatActivity {
+public class StudentTasksActivity extends AppCompatActivity {
 
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
@@ -30,13 +31,15 @@ public class ReviewProgressActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         // get the listview
         expListView = (ExpandableListView) findViewById(R.id.reviewProgressExList);
-
         // preparing list data
         prepareListData();
 
         listAdapter = new ExpandableAdapter(this, listDataHeader, listDataChild);
+
         // setting list adapter
         expListView.setAdapter(listAdapter);
+        expListView.expandGroup(0);
+
     }
 
     /*
@@ -47,35 +50,13 @@ public class ReviewProgressActivity extends AppCompatActivity {
         listDataChild = new HashMap<String, List<String>>();
 
         // Adding child data
-        listDataHeader.add("student123");
-        listDataHeader.add("olivia34");
-        listDataHeader.add("octavo2");
-        listDataHeader.add("interludo231");
-        listDataHeader.add("harry345");
+        listDataHeader.add("Uncompleted Assignments");
 
         // Adding child data
         List<String> student123 = new ArrayList<String>();
-        student123.add("Complete Level 1: Reading Rhythm Notes (3 times)");
-        student123.add("Complete Level 2: Reading Rhythm Rests (3 times)");
-
-        List<String> olivia34 = new ArrayList<String>();
-        olivia34.add("Unlock Level 6: Writing Treble Clef Notes on Lines");
-
-        List<String> octavo2 = new ArrayList<String>();
-        octavo2.add("Complete Level 5: Reading Rhythm Notes (5 times)");
-
-        List<String> interludo231 = new ArrayList<String>();
-        interludo231.add("No tasks to show");
-
-        List<String> harry345 = new ArrayList<String>();
-        harry345.add("No tasks to show");
+        student123.add(" Unlock Bass Clef Writing 1 by 21/09/2017");
 
         listDataChild.put(listDataHeader.get(0), student123); // Header, Child data
-        listDataChild.put(listDataHeader.get(1), olivia34);
-        listDataChild.put(listDataHeader.get(2), octavo2);
-        listDataChild.put(listDataHeader.get(3), interludo231);
-        listDataChild.put(listDataHeader.get(4), harry345);
-
     }
 
 
@@ -89,8 +70,8 @@ public class ReviewProgressActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
 
         if (id == 16908332) {  // home button id
-            Intent intent = new Intent(this, teacher_main_menu.class);
-            startActivity(intent);
+            //Intent intent = new Intent(this, MainMenu.class);
+            //startActivity(intent);
             finish();
             return true;
         }

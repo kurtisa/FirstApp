@@ -60,7 +60,6 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
         txtListChild.setText(childText);
 
         LinearLayout item = convertView.findViewById(R.id.itemLayout);
-
         if (childPosition == 0) {
             item.setBackgroundColor(Color.GREEN);
         }

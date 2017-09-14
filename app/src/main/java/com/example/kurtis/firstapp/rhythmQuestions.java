@@ -198,10 +198,7 @@ public class rhythmQuestions extends AppCompatActivity {
 
             }
         });
-
-
     }
-
 
     private void updatePercentage(int question_attempts, int question_num, TextView percentageCorrect) {
 
@@ -213,7 +210,7 @@ public class rhythmQuestions extends AppCompatActivity {
         Log.d("percent", Integer.toString(percent));
         percentageCorrect.setText(Integer.toString(percent) + "%");
 
-        if (percent >= 80) {
+        if (percent >= 90) {
             percentageCorrect.setTextColor(Color.GREEN);
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -366,6 +363,13 @@ public class rhythmQuestions extends AppCompatActivity {
             return true;
         }
 
+
+        if (id == 16908332) {  // home button id
+            //Intent intent = new Intent(this, MainMenu.class);
+            //startActivity(intent);
+            finish();
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }

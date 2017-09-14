@@ -33,6 +33,7 @@ public class MainMenu extends AppCompatActivity {
     String age;
     DatabaseReference mRootRef;
     ArrayList<String> teacherlist = new ArrayList();
+    Boolean alertBool = true;
     private Intent intent;
     private Menu menu;
     private Intent login_intent;
@@ -55,14 +56,19 @@ public class MainMenu extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });*/
-
+        if (alertBool) {
+            trigger_task_list();
+        }
         ImageButton noteRhythm = (ImageButton) findViewById(R.id.noteRythm);
         ImageButton restRhythm = (ImageButton) findViewById(R.id.restRhythm);
         ImageButton faceLearn = (ImageButton) findViewById(R.id.faceLearn);
         ImageButton faceTouch = (ImageButton) findViewById(R.id.faceTouch);
         ImageButton egbdfLearn = (ImageButton) findViewById(R.id.egbdfLearn);
         ImageButton egbdfTouch = (ImageButton) findViewById(R.id.egbdfTouch);
-
+        ImageButton acegLearn = (ImageButton) findViewById(R.id.acegLearn);
+        ImageButton gbdfaLearn = (ImageButton) findViewById(R.id.gbdfaLearn);
+        ImageButton acegTouch = (ImageButton) findViewById(R.id.acegTouch);
+        ImageButton gbdfaTouch = (ImageButton) findViewById(R.id.gbdfaTouch);
 
         final Intent login_intent = new Intent(this, LoginActivity.class);
         final Intent teacherAddIntent = new Intent(this, teacherAddStudentsActivity.class);
@@ -123,6 +129,39 @@ public class MainMenu extends AppCompatActivity {
                 startActivity(egbdfTouchIntent);
             }
         });
+        final Intent gbdfaLearnIntent = new Intent(this, MainActivity.class);
+
+        gbdfaLearn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v2) {
+                gbdfaLearnIntent.putExtra("LEVEL", "10");
+                startActivity(gbdfaLearnIntent);
+            }
+        });
+        final Intent gbdfaTouchIntent = new Intent(this, touchQuestions.class);
+
+        gbdfaTouch.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v2) {
+                gbdfaTouchIntent.putExtra("LEVEL", "12");
+                startActivity(gbdfaTouchIntent);
+            }
+        });
+        final Intent acegLearnIntent = new Intent(this, MainActivity.class);
+
+        acegLearn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v2) {
+                acegLearnIntent.putExtra("LEVEL", "11");
+                startActivity(acegLearnIntent);
+            }
+
+        });
+        final Intent acegTouchIntent = new Intent(this, touchQuestions.class);
+
+        acegTouch.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v2) {
+                acegTouchIntent.putExtra("LEVEL", "13");
+                startActivity(acegTouchIntent);
+            }
+        });
 
     }
 
@@ -178,7 +217,6 @@ public class MainMenu extends AppCompatActivity {
                 }
             }
 
-
             public void onCancelled(DatabaseError databaseError) {
                 //  Log.w("MAIN MENU", "loadPost:onCancelled", databaseError.toException());
             }
@@ -186,7 +224,30 @@ public class MainMenu extends AppCompatActivity {
 
     }
 
+    private void trigger_task_list() {
+        final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("teachertest3 set you new tasks!");
 
+        TextView task1 = new TextView(this);
+        alert.setView(task1);
+        task1.setPaddingRelative(2, 2, 10, 2);
+        task1.setText("           Unlock Bass Clef Writing 1 by 21/09/2017");
+        task1.setTextSize(14);
+
+        alert.setPositiveButton("View", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+            }
+        });
+
+        alert.setNegativeButton("Ignore", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+            }
+        });
+        alert.show();
+        alertBool = false;
+    }
     private void trigger_add_teacher(final String teacher_username) {
         final AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
@@ -270,6 +331,13 @@ public class MainMenu extends AppCompatActivity {
         if (R.id.action_settings == id) {
 
             startActivity(new Intent(this, StudentSettingsActivity.class));
+
+            return true;
+        }
+
+        if (R.id.assignments == id) {
+
+            startActivity(new Intent(this, StudentTasksActivity.class));
 
             return true;
         }

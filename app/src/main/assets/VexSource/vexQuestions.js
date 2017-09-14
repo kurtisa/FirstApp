@@ -113,9 +113,44 @@ if (level == '1'){
          	case 3:	noteLetter = "E";
          	pitch = "/5";
            				break;
+
          	}
        }
-
+else if (level == '10'){
+         switch (correctNoteNumber){
+         	case 0: noteLetter = "G";
+         	pitch = "/2";
+           				break;
+         	case 1: noteLetter = "B";
+         	pitch = "/2";
+           				break;
+         	case 2: noteLetter = "D";
+         	pitch = "/3";
+           				break;
+         	case 3:	noteLetter = "F";
+         	pitch = "/3";
+           				break;
+            case 3:	noteLetter = "A";
+            pitch = "/3";
+                        break;
+         	}
+        }
+    else if (level == '11'){
+             switch (correctNoteNumber){
+                case 0: noteLetter = "A";
+                pitch = "/2";
+                            break;
+                case 1: noteLetter = "C";
+                pitch = "/3";
+                            break;
+                case 2: noteLetter = "E";
+                pitch = "/3";
+                            break;
+                case 3:	noteLetter = "G";
+                pitch = "/3";
+                            break;
+                }
+                }
     android.updateJavascriptNote(noteLetter);
 
     var notes;

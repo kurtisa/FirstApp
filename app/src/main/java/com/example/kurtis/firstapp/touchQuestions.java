@@ -1,5 +1,6 @@
 package com.example.kurtis.firstapp;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -27,6 +29,7 @@ public class touchQuestions extends AppCompatActivity {
     public static boolean trebleClef;
     public static int question_num = 0;
     public static String level;
+
     final String touchquestions = "<!DOCTYPE html>" +
             "<html>" +
             "<head>" +
@@ -96,7 +99,7 @@ public class touchQuestions extends AppCompatActivity {
             @Override
             public void OnMyBooleanChanged() {
                 if (Connect.getMyBoolean()) {
-                    Log.d("IF STATEMENT", "hey");
+
                     question_num++;
                     question_attempts++;
                     int progress = question_num * 10;
@@ -109,11 +112,13 @@ public class touchQuestions extends AppCompatActivity {
                             .duration(600)
                             .repeat(1)
                             .playOn(button1);
+
                     button1.getBackground().setColorFilter(0xFF00FF00, PorterDuff.Mode.MULTIPLY);
                     button1.setText("Press here to continue!");
                     updatePercentage(question_attempts, question_num, percentageCorrect);
                     fromHere[0] = true;
                     Connect.setMyBoolean(false);
+
                     //finish();
                 } else {
                     if (!fromHere[0]) {
@@ -194,13 +199,44 @@ public class touchQuestions extends AppCompatActivity {
         Log.d("percent", Integer.toString(percent));
         percentageCorrect.setText(Integer.toString(percent) + "%");
 
-        if (percent >= 80) {
+        if (percent >= 90) {
             percentageCorrect.setTextColor(Color.GREEN);
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 percentageCorrect.setTextColor(getResources().getColor(R.color.colorOrangePrimary, getTheme()));
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        Log.d("HOME BUTTION PRESSED", Integer.toString(id));
+        //noinspection SimplifiableIfStatement
+
+        if (id == 16908332) {  // home button id
+            //Intent intent = new Intent(this, MainMenu.class);
+            //startActivity(intent);
+            finish();
+            return true;
+        }
+        if (R.id.action_log_out == id) {
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+        if (R.id.action_settings == id) {
+            return true;
+        }
+        // User chose the "Favorite" action, mark the current item
+        // as a favorite...
+
+        return super.onOptionsItemSelected(item);
     }
 
 }

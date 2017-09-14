@@ -22,7 +22,7 @@
             android:layout_marginBottom="8dp"
             android:visibility="gone" />
 
-        <ScrollView
+    <ScrollView
         android:id="@+id/signup_form"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -136,11 +136,12 @@
 
             <Button
                 android:id="@+id/email_sign_up_button"
-                style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:background="@color/colorOrangePrimary"
                 android:text="@string/action_sign_up"
+                android:textColor="@color/common_google_signin_btn_text_dark_pressed"
                 android:textStyle="bold" />
 
         </LinearLayout>

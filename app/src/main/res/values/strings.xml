@@ -134,6 +134,13 @@
         <item>Level 5: Treble Clef notes on the lines (multi-choice)</item>
         <item>Level 6: Treble Clef notes on the lines (touch)</item>
     </string-array>
+
+    <string-array name="analytics_array">
+        <item>Weekly</item>
+        <item>Monthly</item>
+        <item>Yearly</item>
+    </string-array>
     <string name="title_activity_review_progress">ReviewProgressActivity</string>
+    <string name="title_activity_student_tasks">StudentTasksActivity</string>
 </resources>
 

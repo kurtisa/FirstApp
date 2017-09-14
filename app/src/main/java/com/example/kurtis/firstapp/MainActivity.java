@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         }
         level = getIntent().getStringExtra("LEVEL");
 
-        if ((Objects.equals(level, "1") | Objects.equals(level, "2" )| Objects.equals(level, "10"))) {
+        if ((Objects.equals(level, "1") | Objects.equals(level, "2" ))) {
             trebleClef = true;
             Log.d("IF STATEMENT", "trebleClef set to true");
         } else {
@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("percent", Integer.toString(percent));
         percentageCorrect.setText(Integer.toString(percent) + "%");
 
-        if (percent >= 80) {
+        if (percent >= 90) {
             percentageCorrect.setTextColor(Color.GREEN);
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -248,7 +248,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         finish();
-
 
     }
 
@@ -351,7 +350,19 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
 
+        if (id == 16908332) {  // home button id
+            //Intent intent = new Intent(this, MainMenu.class);
+            //startActivity(intent);
+            finish();
+            return true;
+        }
 
+        if (id == 16908332) {  // home button id
+            //Intent intent = new Intent(this, MainMenu.class);
+            //startActivity(intent);
+            finish();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
