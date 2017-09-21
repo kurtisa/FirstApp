@@ -53,6 +53,7 @@ public class touchQuestions extends AppCompatActivity {
     public int rightAnswer;
     public int QuestionNum = 1;
     public long t1;
+    int percent;
     TextView percentageCorrect;
     ProgressBar progressBar;
     Button button1;
@@ -70,7 +71,7 @@ public class touchQuestions extends AppCompatActivity {
         uid = user.getUid();
         level = getIntent().getStringExtra("LEVEL");
 
-        if ((Objects.equals(level, "5") || Objects.equals(level, "6"))) {
+        if ((Objects.equals(level, "4") || Objects.equals(level, "6"))) {
             trebleClef = true;
             Log.d("IF STATEMENT", "trebleClef set to true");
         } else {
@@ -140,7 +141,7 @@ public class touchQuestions extends AppCompatActivity {
             public void onClick(View v2) {
                 if (button1.getText() == "Press here to continue!") {
                     if (question_num == 11) {
-                        finish();
+                        finish_activity();
                     }
                     webview_touch.reload();
                     YoYo.with(Techniques.Tada)
@@ -151,6 +152,26 @@ public class touchQuestions extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void finish_activity() {
+
+        DatabaseReference userNameRef = mRootRef.child("user-activity");
+        DatabaseReference uidRef = userNameRef.child(uid);
+        DatabaseReference instance = uidRef.push();
+        instance.child("Level").setValue(level);
+        instance.child("Accuracy").setValue(percent);
+
+        long t2 = System.currentTimeMillis();
+        long time_taken = t2 - t1;
+        instance.child("time-taken").setValue(time_taken);
+        instance.child("timestamp").setValue(System.currentTimeMillis());
+
+        Intent intent = new Intent(this, exitScreen.class);
+        intent.putExtra("Accuracy", Integer.toString(percent));
+        intent.putExtra("Level", level);
+        startActivity(intent);
+        finish();
     }
 
 
@@ -195,7 +216,7 @@ public class touchQuestions extends AppCompatActivity {
         Log.d("attempts", Integer.toString(question_attempts));
 
         float percentage = (float) (question_num - 1) / question_attempts;
-        int percent = (int) (percentage * 100);
+        percent = (int) (percentage * 100);
         Log.d("percent", Integer.toString(percent));
         percentageCorrect.setText(Integer.toString(percent) + "%");
 

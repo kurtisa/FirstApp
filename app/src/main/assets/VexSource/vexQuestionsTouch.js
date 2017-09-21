@@ -5,10 +5,10 @@ VF = Vex.Flow;
 var level
 level = android.javaScriptGetTouchLevel();
 
-if (level == '5' | level == '12'){
+if (level == '6' | level == '10'){
 min = Math.ceil(0);
 max = Math.floor(4);
-} else if (level == '6' | level == '13'){
+} else if (level == '4' | level == '8'){
 min = Math.ceil(0);
 max = Math.floor(3);
 }
@@ -71,7 +71,7 @@ if (level == '5' | level =='6'){
   	pitch = "/5";
         				break;
   	}
-} else if (level == '6' | level =='13'){
+} else if (level == '4' | level =='8'){
          switch (correctNoteNumber){
          	case 0: noteLetter = "F";
          	pitch = "/4";
@@ -95,7 +95,7 @@ if (level == '5' | level =='6'){
 var tickContext = new Vex.Flow.TickContext();
    var note =  new Vex.Flow.StaveNote({clef: stringClef, keys: [noteLetter + pitch], duration: "q",  auto_stem: true }).setContext(ctx).setStave(stave);
 
-    if (level == '5'){
+    if (level == '4'){
    var noteF =  new Vex.Flow.StaveNote({clef: stringClef, keys: ["F/4"], duration: "q",  auto_stem: true }).setContext(ctx).setStave(stave);
    var noteA =  new Vex.Flow.StaveNote({clef: stringClef, keys: ["A/4"], duration: "q",  auto_stem: true }).setContext(ctx).setStave(stave);
    var noteC =  new Vex.Flow.StaveNote({clef: stringClef, keys: ["C/5"], duration: "q",  auto_stem: true }).setContext(ctx).setStave(stave);
@@ -115,7 +115,7 @@ var tickContext = new Vex.Flow.TickContext();
     tickContext.addTickable(BnoteLines)
     tickContext.addTickable(GnoteLines)
     tickContext.addTickable(EnoteLines)
-    }else if (level == '12'){
+    }else if (level == '10'){
      var anoteLines =  new Vex.Flow.StaveNote({clef: stringClef, keys: ["A/3"], duration: "q",  auto_stem: true }).setContext(ctx).setStave(stave);
      var fnoteLines =  new Vex.Flow.StaveNote({clef: stringClef, keys: ["F/3"], duration: "q",  auto_stem: true }).setContext(ctx).setStave(stave);
      var dnoteLines =  new Vex.Flow.StaveNote({clef: stringClef, keys: ["D/2"], duration: "q",  auto_stem: true }).setContext(ctx).setStave(stave);
@@ -126,7 +126,7 @@ var tickContext = new Vex.Flow.TickContext();
      tickContext.addTickable(dnoteLines)
      tickContext.addTickable(bnoteLines)
      tickContext.addTickable(gnoteLines)
-     }else if (level == '13'){
+     }else if (level == '8'){
       var GnoteLines =  new Vex.Flow.StaveNote({clef: stringClef, keys: ["G/3"], duration: "q",  auto_stem: true }).setContext(ctx).setStave(stave);
       var EnoteLines =  new Vex.Flow.StaveNote({clef: stringClef, keys: ["E/3"], duration: "q",  auto_stem: true }).setContext(ctx).setStave(stave);
       var CnoteLines =  new Vex.Flow.StaveNote({clef: stringClef, keys: ["C/2"], duration: "q",  auto_stem: true }).setContext(ctx).setStave(stave);
@@ -161,7 +161,7 @@ var tickContext = new Vex.Flow.TickContext();
                 clientY = parseInt(touchobj.clientY)
                 e.preventDefault()
 
-                if (level == '5' | level == '12'){
+                if (level == '4' | level == '8'){
                 notesX = (noteF.getAbsoluteX() * 4 + 10);
                 notesY = (noteF.getYs() * 4);
                 android.javaScriptGetTouch(clientX, clientY, notesY, notesX)

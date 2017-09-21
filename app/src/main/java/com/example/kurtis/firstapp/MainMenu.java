@@ -34,6 +34,25 @@ public class MainMenu extends AppCompatActivity {
     DatabaseReference mRootRef;
     ArrayList<String> teacherlist = new ArrayList();
     Boolean alertBool = true;
+    ImageButton noteRhythm;
+    ImageButton restRhythm;
+    ImageButton faceLearn;
+    ImageButton faceTouch;
+    ImageButton egbdfLearn;
+    ImageButton egbdfTouch;
+    ImageButton acegLearn;
+    ImageButton gbdfaLearn;
+    ImageButton acegTouch;
+    ImageButton gbdfaTouch;
+    Boolean restRhythmLock;
+    Boolean faceLearnLock;
+    Boolean faceTouchLock;
+    Boolean egbdfLearnLock;
+    Boolean egbdfTouchLock;
+    Boolean acegLearnLock;
+    Boolean acegTouchLock;
+    Boolean gbdfaLearnLock;
+    Boolean gbdfaTouchLock;
     private Intent intent;
     private Menu menu;
     private Intent login_intent;
@@ -43,7 +62,7 @@ public class MainMenu extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.app_bar_main_menu);
-        Toolbar actionBar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar actionBar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(actionBar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
@@ -56,19 +75,16 @@ public class MainMenu extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });*/
-        if (alertBool) {
-            trigger_task_list();
-        }
-        ImageButton noteRhythm = (ImageButton) findViewById(R.id.noteRythm);
-        ImageButton restRhythm = (ImageButton) findViewById(R.id.restRhythm);
-        ImageButton faceLearn = (ImageButton) findViewById(R.id.faceLearn);
-        ImageButton faceTouch = (ImageButton) findViewById(R.id.faceTouch);
-        ImageButton egbdfLearn = (ImageButton) findViewById(R.id.egbdfLearn);
-        ImageButton egbdfTouch = (ImageButton) findViewById(R.id.egbdfTouch);
-        ImageButton acegLearn = (ImageButton) findViewById(R.id.acegLearn);
-        ImageButton gbdfaLearn = (ImageButton) findViewById(R.id.gbdfaLearn);
-        ImageButton acegTouch = (ImageButton) findViewById(R.id.acegTouch);
-        ImageButton gbdfaTouch = (ImageButton) findViewById(R.id.gbdfaTouch);
+        noteRhythm = (ImageButton) findViewById(R.id.noteRythm);
+        restRhythm = (ImageButton) findViewById(R.id.restRhythm);
+        faceLearn = (ImageButton) findViewById(R.id.faceLearn);
+        faceTouch = (ImageButton) findViewById(R.id.faceTouch);
+        egbdfLearn = (ImageButton) findViewById(R.id.egbdfLearn);
+        egbdfTouch = (ImageButton) findViewById(R.id.egbdfTouch);
+        acegLearn = (ImageButton) findViewById(R.id.acegLearn);
+        gbdfaLearn = (ImageButton) findViewById(R.id.gbdfaLearn);
+        acegTouch = (ImageButton) findViewById(R.id.acegTouch);
+        gbdfaTouch = (ImageButton) findViewById(R.id.gbdfaTouch);
 
         final Intent login_intent = new Intent(this, LoginActivity.class);
         final Intent teacherAddIntent = new Intent(this, teacherAddStudentsActivity.class);
@@ -77,7 +93,7 @@ public class MainMenu extends AppCompatActivity {
 
         noteRhythm.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v2) {
-                noteRhythmIntent.putExtra("LEVEL", "8");
+                noteRhythmIntent.putExtra("LEVEL", "1");
                 startActivity(noteRhythmIntent);
             }
 
@@ -86,8 +102,10 @@ public class MainMenu extends AppCompatActivity {
 
         restRhythm.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v2) {
-                restIntent.putExtra("LEVEL", "9");
-                startActivity(restIntent);
+                if (restRhythmLock) {
+                    restIntent.putExtra("LEVEL", "2");
+                    startActivity(restIntent);
+                }
             }
         });
 
@@ -95,8 +113,10 @@ public class MainMenu extends AppCompatActivity {
 
         faceLearn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v2) {
-                faceIntent.putExtra("LEVEL", "1");
-                startActivity(faceIntent);
+                if (faceLearnLock) {
+                    faceIntent.putExtra("LEVEL", "3");
+                    startActivity(faceIntent);
+                }
             }
 
         });
@@ -106,8 +126,10 @@ public class MainMenu extends AppCompatActivity {
 
         faceTouch.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v2) {
-                faceTouchIntent.putExtra("LEVEL", "6");
-                startActivity(faceTouchIntent);
+                if (faceTouchLock) {
+                    faceTouchIntent.putExtra("LEVEL", "4");
+                    startActivity(faceTouchIntent);
+                }
             }
 
         });
@@ -116,8 +138,10 @@ public class MainMenu extends AppCompatActivity {
 
         egbdfLearn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v2) {
-                egbdfLearnIntent.putExtra("LEVEL", "2");
-                startActivity(egbdfLearnIntent);
+                if (egbdfLearnLock) {
+                    egbdfLearnIntent.putExtra("LEVEL", "5");
+                    startActivity(egbdfLearnIntent);
+                }
             }
 
         });
@@ -125,32 +149,40 @@ public class MainMenu extends AppCompatActivity {
 
         egbdfTouch.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v2) {
-                egbdfTouchIntent.putExtra("LEVEL", "5");
-                startActivity(egbdfTouchIntent);
+                if (egbdfTouchLock) {
+                    egbdfTouchIntent.putExtra("LEVEL", "6");
+                    startActivity(egbdfTouchIntent);
+                }
             }
         });
         final Intent gbdfaLearnIntent = new Intent(this, MainActivity.class);
 
         gbdfaLearn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v2) {
-                gbdfaLearnIntent.putExtra("LEVEL", "10");
-                startActivity(gbdfaLearnIntent);
+                if (gbdfaLearnLock) {
+                    gbdfaLearnIntent.putExtra("LEVEL", "7");
+                    startActivity(gbdfaLearnIntent);
+                }
             }
         });
         final Intent gbdfaTouchIntent = new Intent(this, touchQuestions.class);
 
         gbdfaTouch.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v2) {
-                gbdfaTouchIntent.putExtra("LEVEL", "12");
-                startActivity(gbdfaTouchIntent);
+                if (gbdfaTouchLock) {
+                    gbdfaTouchIntent.putExtra("LEVEL", "8");
+                    startActivity(gbdfaTouchIntent);
+                }
             }
         });
         final Intent acegLearnIntent = new Intent(this, MainActivity.class);
 
         acegLearn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v2) {
-                acegLearnIntent.putExtra("LEVEL", "11");
-                startActivity(acegLearnIntent);
+                if (acegLearnLock) {
+                    acegLearnIntent.putExtra("LEVEL", "9");
+                    startActivity(acegLearnIntent);
+                }
             }
 
         });
@@ -158,14 +190,14 @@ public class MainMenu extends AppCompatActivity {
 
         acegTouch.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v2) {
-                acegTouchIntent.putExtra("LEVEL", "13");
-                startActivity(acegTouchIntent);
+                if (acegTouchLock) {
+                    acegTouchIntent.putExtra("LEVEL", "10");
+                    startActivity(acegTouchIntent);
+                }
             }
         });
 
     }
-
-
     @Override
     public void onStart() {
         super.onStart();
@@ -192,16 +224,14 @@ public class MainMenu extends AppCompatActivity {
                 //  Log.w("MAIN MENU", "loadPost:onCancelled", databaseError.toException());
             }
         });
-
     }
 
     private void addTeacherListener() {
 
-
+        DatabaseReference levelRef = mRootRef.child("student_levels").child(username_string);
         final DatabaseReference studentList = mRootRef.child("student-list").child(username_string);
         // Check if student's teacher list has changed
         studentList.addValueEventListener(new ValueEventListener() {
-
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                     // if the student's list of teachers does not contain the teacher, or the teacher username value is false (student hasn't accepted request
@@ -222,6 +252,104 @@ public class MainMenu extends AppCompatActivity {
             }
         });
 
+        levelRef.addValueEventListener(new ValueEventListener() {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                    // if the student's list of teachers does not contain the teacher, or the teacher username value is false (student hasn't accepted request
+                    unlockLevels(childDataSnapshot.getKey(), childDataSnapshot.getValue(Boolean.class));
+                }
+            }
+            public void onCancelled(DatabaseError databaseError) {
+                //  Log.w("MAIN MENU", "loadPost:onCancelled", databaseError.toException());
+            }
+        });
+
+    }
+
+    private void unlockLevels(String key, Boolean value) {
+        switch (key) {
+            case "level2":
+                if (value) {
+                    restRhythm.setBackground(getDrawable(R.drawable.restingman));
+                    restRhythmLock = true;
+                } else {
+                    restRhythm.setBackground(getDrawable(R.drawable.grey_restingman));
+                    restRhythmLock = false;
+                }
+                break;
+            case "level3":
+                if (value) {
+                    faceLearn.setBackground(getDrawable(R.drawable.spaces_bird));
+                    faceLearnLock = true;
+                } else {
+                    faceLearn.setBackground(getDrawable(R.drawable.grey_spaces_bird));
+                    faceLearnLock = false;
+                }
+                break;
+            case "level4":
+                if (value) {
+                    faceTouch.setBackground(getDrawable(R.drawable.baby_bird));
+                    faceTouchLock = true;
+                } else {
+                    faceTouch.setBackground(getDrawable(R.drawable.grey_baby_bird));
+                    faceTouchLock = false;
+                }
+                break;
+            case "level5":
+                if (value) {
+                    egbdfLearn.setBackground(getDrawable(R.drawable.lines_bird));
+                    egbdfLearnLock = true;
+                } else {
+                    egbdfLearn.setBackground(getDrawable(R.drawable.grey_lines_bird));
+                    egbdfLearnLock = false;
+                }
+                break;
+            case "level6":
+                if (value) {
+                    egbdfTouch.setBackground(getDrawable(R.drawable.baby_bird));
+                    egbdfTouchLock = true;
+                } else {
+                    egbdfTouch.setBackground(getDrawable(R.drawable.grey_baby_bird));
+                    egbdfTouchLock = false;
+                }
+                break;
+            case "level7":
+                if (value) {
+                    acegLearn.setBackground(getDrawable(R.drawable.spaces_bird));
+                    acegLearnLock = true;
+                } else {
+                    acegLearn.setBackground(getDrawable(R.drawable.grey_spaces_bird));
+                    acegLearnLock = false;
+                }
+                break;
+            case "level8":
+                if (value) {
+                    acegTouch.setBackground(getDrawable(R.drawable.baby_bird));
+                    acegTouchLock = true;
+                } else {
+                    acegTouch.setBackground(getDrawable(R.drawable.grey_baby_bird));
+                    acegTouchLock = false;
+                }
+                break;
+            case "level9":
+                if (value) {
+                    gbdfaLearn.setBackground(getDrawable(R.drawable.lines_bird));
+                    gbdfaLearnLock = true;
+                } else {
+                    gbdfaLearn.setBackground(getDrawable(R.drawable.grey_lines_bird));
+                    gbdfaLearnLock = false;
+                }
+                break;
+            case "level10":
+                if (value) {
+                    gbdfaTouch.setBackground(getDrawable(R.drawable.baby_bird));
+                    gbdfaTouchLock = true;
+                } else {
+                    gbdfaTouch.setBackground(getDrawable(R.drawable.grey_baby_bird));
+                    gbdfaTouchLock = false;
+                }
+                break;
+        }
     }
 
     private void trigger_task_list() {

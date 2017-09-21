@@ -19,6 +19,7 @@
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -96,7 +97,8 @@
             android:theme="@style/StudentAppTheme" />
         <activity
             android:name=".StudentAnalytics"
-            android:theme="@style/TeacherAppThemeAddStudent"></activity>
+            android:theme="@style/TeacherAppThemeAddStudent" />
+        <activity android:name=".exitScreen"></activity>
     </application>
 
 </manifest>

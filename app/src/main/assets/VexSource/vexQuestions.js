@@ -4,15 +4,12 @@ VF = Vex.Flow;
 
 var level
 level = android.javaScriptGetLevel();
-if (level == '1' | level == '10'){
-min = Math.ceil(0);
-max = Math.floor(4);
-} else if (level == '2' | level == '11'){
+if (level == '3' | level == '7'){
 min = Math.ceil(0);
 max = Math.floor(3);
-} else{
+} else if (level == '5' | level == '9'){
 min = Math.ceil(0);
-max = Math.floor(11);
+max = Math.floor(4);
 }
 
 do{
@@ -52,36 +49,8 @@ stave.addClef(stringClef).setContext(ctx).draw();
 var noteLetter;
 var accidental;
 
-if (level == '3'){
-  switch (correctNoteNumber){
-  	case 0: noteLetter = "A";
-    				break;
-  	case 1: noteLetter = "Bb";
-    				break;
-  	case 2: noteLetter = "B";
-    				break;
-  	case 3:	noteLetter = "C";
-    				break;
-  	case 4:	noteLetter = "C#";
-        				break;
-  	case 5: noteLetter = "D";
-        				break;
-  	case 6: noteLetter = "Eb";
-        				break;
-  	case 7: noteLetter = "E";
-        				break;
-  	case 8:	noteLetter = "F";
-        				break;
-  	case 9: noteLetter = "F";
-        				break;
-  	case 10: noteLetter = "G";
-        				break;
-  	case 11: noteLetter = "Ab";
-        				break;
-  	}
-}
 var pitch;
-if (level == '1'){
+if (level == '5'){
   switch (correctNoteNumber){
   	case 0: noteLetter = "E";
   	pitch = "/4";
@@ -99,7 +68,7 @@ if (level == '1'){
   	pitch = "/5";
         				break;
   	}
-} else if (level == '2'){
+} else if (level == '3'){
          switch (correctNoteNumber){
          	case 0: noteLetter = "F";
          	pitch = "/4";
@@ -116,7 +85,7 @@ if (level == '1'){
 
          	}
        }
-else if (level == '10'){
+else if (level == '9'){
          switch (correctNoteNumber){
          	case 0: noteLetter = "G";
          	pitch = "/2";
@@ -135,7 +104,7 @@ else if (level == '10'){
                         break;
          	}
         }
-    else if (level == '11'){
+    else if (level == '7'){
              switch (correctNoteNumber){
                 case 0: noteLetter = "A";
                 pitch = "/2";

@@ -1,5 +1,6 @@
 package com.example.kurtis.firstapp;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseUser user;
     String uid;
     TextView percentageCorrect;
+    int percent;
     private boolean flag = true;
     private WebView wv1;
     private Button button1;
@@ -66,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         }
         level = getIntent().getStringExtra("LEVEL");
 
-        if ((Objects.equals(level, "1") | Objects.equals(level, "2" ))) {
+        if ((Objects.equals(level, "3") | Objects.equals(level, "2"))) {
             trebleClef = true;
             Log.d("IF STATEMENT", "trebleClef set to true");
         } else {
@@ -206,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("attempts", Integer.toString(question_attempts));
 
         float percentage = (float) (question_num - 1) / question_attempts;
-        int percent = (int) (percentage * 100);
+        percent = (int) (percentage * 100);
         Log.d("percent", Integer.toString(percent));
         percentageCorrect.setText(Integer.toString(percent) + "%");
 
@@ -239,14 +241,17 @@ public class MainActivity extends AppCompatActivity {
             DatabaseReference uidRef = userNameRef.child(uid);
             DatabaseReference instance = uidRef.push();
             instance.child("Level").setValue(level);
-            instance.child("Attempts").setValue(question_attempts);
+            instance.child("Accuracy").setValue(percent);
 
             long t2 = System.currentTimeMillis();
             long time_taken = t2 - t1;
             instance.child("time-taken").setValue(time_taken);
             instance.child("timestamp").setValue(System.currentTimeMillis());
         }
-
+        Intent intent = new Intent(this, exitScreen.class);
+        intent.putExtra("Accuracy", Integer.toString(percent));
+        intent.putExtra("Level", level);
+        startActivity(intent);
         finish();
 
     }

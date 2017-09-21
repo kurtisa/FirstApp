@@ -1,6 +1,7 @@
 package com.example.kurtis.firstapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
@@ -44,6 +45,7 @@ public class rhythmQuestions extends AppCompatActivity {
     FirebaseUser user;
     String uid;
     TextView percentageCorrect;
+    int percent = 100;
     private ProgressBar progressBar;
     private WebView wv1;
     private Button button1;
@@ -206,7 +208,7 @@ public class rhythmQuestions extends AppCompatActivity {
         Log.d("attempts", Integer.toString(question_attempts));
 
         float percentage = (float) (question_num - 1) / question_attempts;
-        int percent = (int) (percentage * 100);
+        percent = (int) (percentage * 100);
         Log.d("percent", Integer.toString(percent));
         percentageCorrect.setText(Integer.toString(percent) + "%");
 
@@ -232,7 +234,10 @@ public class rhythmQuestions extends AppCompatActivity {
             instance.child("time-taken").setValue(time_taken);
             instance.child("timestamp").setValue(System.currentTimeMillis());
         }
-
+        Intent intent = new Intent(this, exitScreen.class);
+        intent.putExtra("Accuracy", Integer.toString(percent));
+        intent.putExtra("Level", level);
+        startActivity(intent);
         finish();
 
 

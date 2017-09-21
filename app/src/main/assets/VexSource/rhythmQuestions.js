@@ -4,10 +4,10 @@ VF = Vex.Flow;
 
 var level
 level = android.javaScriptGetRhythmLevel();
-if (level == '8'){
+if (level == '1'){
 min = Math.ceil(0);
 max = Math.floor(3);
-} else if (level == '9'){
+} else if (level == '2'){
 min = Math.ceil(4);
 max = Math.floor(7);
 }
@@ -38,7 +38,7 @@ var stave = new Vex.Flow.Stave(10, -20, 70);
     //renderer.resize(289, 333);
     stave.setContext(ctx).draw();
 
-if (level == '8'){
+if (level == '1'){
   switch (correctRhythmNumber){
   	case 0: rhythmLetter = "w";
                 beats=4;
@@ -58,7 +58,7 @@ if (level == '8'){
                     break;
 
     }
-}else if (level == '9'){
+}else if (level == '2'){
          switch (correctRhythmNumber){
          	case 0: rhythmLetter = "w";
                     beats=4;

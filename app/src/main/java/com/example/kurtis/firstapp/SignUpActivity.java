@@ -561,6 +561,99 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                     }
                 }
             });
+
+            DatabaseReference studentLevel2Ref = mRootRef.child("student_levels").child(mUsername).child("level2"); //setting up an index of usernames mapped to uid
+            DatabaseReference studentLevel3Ref = mRootRef.child("student_levels").child(mUsername).child("level3");
+            DatabaseReference studentLevel4Ref = mRootRef.child("student_levels").child(mUsername).child("level4");
+            DatabaseReference studentLevel5Ref = mRootRef.child("student_levels").child(mUsername).child("level5");
+            DatabaseReference studentLevel6Ref = mRootRef.child("student_levels").child(mUsername).child("level6");
+            DatabaseReference studentLevel7Ref = mRootRef.child("student_levels").child(mUsername).child("level7");
+            DatabaseReference studentLevel8Ref = mRootRef.child("student_levels").child(mUsername).child("level8");
+            DatabaseReference studentLevel9Ref = mRootRef.child("student_levels").child(mUsername).child("level9");
+            DatabaseReference studentLevel10Ref = mRootRef.child("student_levels").child(mUsername).child("level10");
+
+            studentLevel2Ref.setValue(false, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        databaseWriteError = ("Data could not be saved " + databaseError.getMessage());
+                        success = false;
+                    }
+                }
+            });
+
+            studentLevel3Ref.setValue(false, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        databaseWriteError = ("Data could not be saved " + databaseError.getMessage());
+                        success = false;
+                    }
+                }
+            });
+            studentLevel4Ref.setValue(false, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        databaseWriteError = ("Data could not be saved " + databaseError.getMessage());
+                        success = false;
+                    }
+                }
+            });
+            studentLevel5Ref.setValue(false, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        databaseWriteError = ("Data could not be saved " + databaseError.getMessage());
+                        success = false;
+                    }
+                }
+            });
+            studentLevel6Ref.setValue(false, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        databaseWriteError = ("Data could not be saved " + databaseError.getMessage());
+                        success = false;
+                    }
+                }
+            });
+            studentLevel7Ref.setValue(false, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        databaseWriteError = ("Data could not be saved " + databaseError.getMessage());
+                        success = false;
+                    }
+                }
+            });
+            studentLevel8Ref.setValue(false, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        databaseWriteError = ("Data could not be saved " + databaseError.getMessage());
+                        success = false;
+                    }
+                }
+            });
+            studentLevel9Ref.setValue(false, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        databaseWriteError = ("Data could not be saved " + databaseError.getMessage());
+                        success = false;
+                    }
+                }
+            });
+            studentLevel10Ref.setValue(false, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        databaseWriteError = ("Data could not be saved " + databaseError.getMessage());
+                        success = false;
+                    }
+                }
+            });
             return success;
         }
 
