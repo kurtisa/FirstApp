@@ -5,10 +5,10 @@ VF = Vex.Flow;
 var level
 level = android.javaScriptGetTouchLevel();
 
-if (level == '5' | level == '12'){
+if (level == '5' || level == '12'){
 min = Math.ceil(0);
 max = Math.floor(4);
-} else if (level == '6' | level == '13'){
+} else if (level == '6' || level == '13'){
 min = Math.ceil(0);
 max = Math.floor(3);
 }
@@ -53,7 +53,7 @@ var accidental;
 
 
 var pitch;
-if (level == '5' | level =='6'){
+if (level == '6' ){
   switch (correctNoteNumber){
   	case 0: noteLetter = "E";
   	pitch = "/4";
@@ -71,7 +71,7 @@ if (level == '5' | level =='6'){
   	pitch = "/5";
         				break;
   	}
-} else if (level == '6' | level =='13'){
+} else if (level == '5'){
          switch (correctNoteNumber){
          	case 0: noteLetter = "F";
          	pitch = "/4";
@@ -85,8 +85,45 @@ if (level == '5' | level =='6'){
          	case 3:	noteLetter = "E";
          	pitch = "/5";
            				break;
-         	}
+    }
+
+}else if (level == '12'){
+         switch (correctNoteNumber){
+            case 0: noteLetter = "A";
+            pitch = "/4";
+                        break;
+            case 1: noteLetter = "C";
+            pitch = "/4";
+                        break;
+            case 2: noteLetter = "E";
+            pitch = "/5";
+                        break;
+            case 3:	noteLetter = "G";
+            pitch = "/5";
+                        break;
+            }
+
+}else if (level == '13'){
+         switch (correctNoteNumber){
+            case 0: noteLetter = "G";
+            pitch = "/4";
+                        break;
+            case 1: noteLetter = "B";
+            pitch = "/4";
+                        break;
+            case 2: noteLetter = "D";
+            pitch = "/5";
+                        break;
+            case 3:	noteLetter = "F";
+            pitch = "/5";
+                        break;
+            case 4:	noteLetter = "A";
+            pitch = "/5";
+                        break;
+            }
        }
+
+
 
   android.updateJavascriptNote(noteLetter);
 
@@ -122,7 +159,7 @@ var tickContext = new Vex.Flow.TickContext();
      var bnoteLines =  new Vex.Flow.StaveNote({clef: stringClef, keys: ["B/2"], duration: "q",  auto_stem: true }).setContext(ctx).setStave(stave);
      var gnoteLines =  new Vex.Flow.StaveNote({clef: stringClef, keys: ["G/2"], duration: "q",  auto_stem: true }).setContext(ctx).setStave(stave);
      tickContext.addTickable(anoteLines)
-     tickContext.addTickable(fadeOutnoteLines)
+     tickContext.addTickable(fnoteLines)
      tickContext.addTickable(dnoteLines)
      tickContext.addTickable(bnoteLines)
      tickContext.addTickable(gnoteLines)
@@ -161,7 +198,7 @@ var tickContext = new Vex.Flow.TickContext();
                 clientY = parseInt(touchobj.clientY)
                 e.preventDefault()
 
-                if (level == '5' | level == '12'){
+                if (level == '5' || level == '13'){
                 notesX = (noteF.getAbsoluteX() * 4 + 10);
                 notesY = (noteF.getYs() * 4);
                 android.javaScriptGetTouch(clientX, clientY, notesY, notesX)

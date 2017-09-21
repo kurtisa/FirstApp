@@ -73,7 +73,6 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
         final Intent teacherAddIntent = new Intent(this, teacherAddStudentsActivity.class);
 
         final Intent noteRhythmIntent = new Intent(this, rhythmQuestions.class);
-
         noteRhythm.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v2) {
                 noteRhythmIntent.putExtra("LEVEL", "8");
@@ -81,6 +80,7 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
             }
 
         });
+
         final Intent restIntent = new Intent(this, rhythmQuestions.class);
 
         restRhythm.setOnClickListener(new View.OnClickListener() {
@@ -105,7 +105,7 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
 
         faceTouch.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v2) {
-                faceTouchIntent.putExtra("LEVEL", "6");
+                faceTouchIntent.putExtra("LEVEL", "5");
                 startActivity(faceTouchIntent);
             }
 
@@ -124,7 +124,7 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
 
         egbdfTouch.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v2) {
-                egbdfTouchIntent.putExtra("LEVEL", "5");
+                egbdfTouchIntent.putExtra("LEVEL", "6");
                 startActivity(egbdfTouchIntent);
             }
         });
@@ -136,14 +136,7 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
                 startActivity(gbdfaLearnIntent);
             }
         });
-        final Intent gbdfaTouchIntent = new Intent(this, touchQuestions.class);
 
-        gbdfaTouch.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v2) {
-                gbdfaTouchIntent.putExtra("LEVEL", "12");
-                startActivity(gbdfaTouchIntent);
-            }
-        });
         final Intent acegLearnIntent = new Intent(this, MainActivity.class);
 
         acegLearn.setOnClickListener(new View.OnClickListener() {
@@ -153,8 +146,17 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
             }
 
         });
-        final Intent acegTouchIntent = new Intent(this, touchQuestions.class);
 
+        final Intent gbdfaTouchIntent = new Intent(this, touchQuestions.class);
+
+        gbdfaTouch.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v2) {
+                gbdfaTouchIntent.putExtra("LEVEL", "12");
+                startActivity(gbdfaTouchIntent);
+            }
+        });
+
+        final Intent acegTouchIntent = new Intent(this, touchQuestions.class);
         acegTouch.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v2) {
                 acegTouchIntent.putExtra("LEVEL", "13");
@@ -347,10 +349,12 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
             intent.putExtra("LEVEL", "7");
             startActivity(intent);
         }else if (id == R.id.lvl10) {
+            //bass reading 1
             intent = new Intent(this, MainActivity.class);
             intent.putExtra("LEVEL", "10");
             startActivity(intent);
         }else if (id == R.id.lvl11) {
+            //bass reading 2
         intent = new Intent(this, MainActivity.class);
         intent.putExtra("LEVEL", "11");
         startActivity(intent);
