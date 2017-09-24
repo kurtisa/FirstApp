@@ -8,7 +8,7 @@ abstract class variableListener {
 
     public static class Connect {
         public static boolean myBoolean = true;
-        private static List<variableListener> listeners = new ArrayList<variableListener>();
+        public static List<variableListener> listeners = new ArrayList<variableListener>();
 
         public static boolean getMyBoolean() {
             return myBoolean;
@@ -20,8 +20,6 @@ abstract class variableListener {
                 l.OnMyBooleanChanged();
             }
         }
-
-
         public static void addMyBooleanListener(variableListener l) {
             listeners.add(l);
         }

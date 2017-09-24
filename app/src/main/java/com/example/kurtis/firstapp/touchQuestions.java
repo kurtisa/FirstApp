@@ -23,23 +23,21 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class touchQuestions extends AppCompatActivity {
     public static boolean trebleClef;
     public static int question_num = 0;
     public static String level;
-
     final String touchquestions = "<!DOCTYPE html>" +
             "<html>" +
             "<head>" +
             "<meta charset=\"UTF-8\">" +
             "<link rel=\"stylesheet\" type=\"text/css\" href=\"VexSource/vexQuestionsTouch.css\".css\"" +
-            "</head>" +
-            "<body>" + "<body leftmargin=\"0\" topmargin=\"0\" rightmargin=\"0\" bottommargin=\"0\"> " +
-            "<div id=container>" +
+            "</head>" + "<body leftmargin=\"0\" topmargin=\"0\" rightmargin=\"0\" bottommargin=\"0\"> " +
+            "<body>" +
             "<div id=question>" +
-            "</div>" +
             "</div>" +
             "<script src=\"jquery-3.2.1.slim.js\"> </script>" +
             "<script src=\"raphael.min.js\"> </script>" +
@@ -65,7 +63,7 @@ public class touchQuestions extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        variableListener.Connect.listeners = new ArrayList<variableListener>();
 
         t1 = System.currentTimeMillis();
         uid = user.getUid();
@@ -83,7 +81,6 @@ public class touchQuestions extends AppCompatActivity {
         setContentView(R.layout.activity_touch_questions);
         webview_touch = (WebView) findViewById(R.id.webview_touch);
         webview_touch.addJavascriptInterface(new android(getApplicationContext()), "android");
-
         WebSettings webSettings = webview_touch.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
@@ -92,41 +89,55 @@ public class touchQuestions extends AppCompatActivity {
         percentageCorrect.setText("100%");
         percentageCorrect.setTextColor(Color.GREEN);
         webview_touch.loadDataWithBaseURL("file:///android_asset/", touchquestions, "text/html", "utf-8", null);
+        webview_touch.reload();
+        webview_touch.clearCache(true);
+        webview_touch.setVerticalScrollBarEnabled(false);
+        webview_touch.setHorizontalScrollBarEnabled(false);
         updateQuestionText();
         progressBar = (ProgressBar) findViewById(R.id.touchDeterminateBar);
         button1 = (Button) findViewById(R.id.touchQuestions);
         final boolean[] fromHere = {false};
+
+
+        TextView message = (TextView) findViewById(R.id.message);
+
+        if (Objects.equals(level, "4") || Objects.equals(level, "8")) {
+            message.setText("Notes in the spaces!");
+        } else if (Objects.equals(level, "6") || Objects.equals(level, "10")) {
+            message.setText("Notes in the lines!");
+        }
+
+
+        // variableListener.Connect.setMyBoolean(false);
         variableListener.Connect.addMyBooleanListener(new variableListener() {
             @Override
             public void OnMyBooleanChanged() {
                 if (Connect.getMyBoolean()) {
-
                     question_num++;
                     question_attempts++;
                     int progress = question_num * 10;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         progressBar.setProgress(progress, true);
                     }
-                    Log.d("IF STATEMENT", Integer.toString(question_num));
+                    Log.d("IF STATEMENT", "HERE I AM");
 
                     YoYo.with(Techniques.Pulse)
-                            .duration(600)
+                            .duration(300)
                             .repeat(1)
                             .playOn(button1);
 
                     button1.getBackground().setColorFilter(0xFF00FF00, PorterDuff.Mode.MULTIPLY);
                     button1.setText("Press here to continue!");
                     updatePercentage(question_attempts, question_num, percentageCorrect);
-                    fromHere[0] = true;
-                    Connect.setMyBoolean(false);
-
-                    //finish();
+                    // fromHere[0] = true;
+                    // Connect.setMyBoolean(false);
                 } else {
                     if (!fromHere[0]) {
+                        Log.d("OKAY", "JAVASCRIPT SAID I BAD");
                         question_attempts = question_attempts + 1;
                         updatePercentage(question_attempts, question_num, percentageCorrect);
                     } else {
-                        // do nothing
+                        Log.d("OKAY", "ACTIVITY SAID I BAD");
                         fromHere[0] = false;
                     }
                 }
@@ -145,7 +156,7 @@ public class touchQuestions extends AppCompatActivity {
                     }
                     webview_touch.reload();
                     YoYo.with(Techniques.Tada)
-                            .duration(1300)
+                            .duration(1200)
                             .playOn(button1);
                     updateQuestionText();
                 }
@@ -166,16 +177,19 @@ public class touchQuestions extends AppCompatActivity {
         long time_taken = t2 - t1;
         instance.child("time-taken").setValue(time_taken);
         instance.child("timestamp").setValue(System.currentTimeMillis());
-
+        //
+        //  variableListener.Connect.setMyBoolean(false);
         Intent intent = new Intent(this, exitScreen.class);
         intent.putExtra("Accuracy", Integer.toString(percent));
         intent.putExtra("Level", level);
         startActivity(intent);
+        webview_touch.reload();
         finish();
     }
 
 
     public void updateQuestionText() {
+        Log.d("HERE", "Updated question text");
         final TextView button1 = (TextView) findViewById(R.id.touchQuestions);
         // button1.getBackground().setColorFilter(0xFF00FF00, PorterDuff.Mode.MULTIPLY);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -212,12 +226,8 @@ public class touchQuestions extends AppCompatActivity {
 
     private void updatePercentage(int question_attempts, int question_num, TextView percentageCorrect) {
 
-        Log.d("num", Integer.toString(question_num));
-        Log.d("attempts", Integer.toString(question_attempts));
-
         float percentage = (float) (question_num - 1) / question_attempts;
         percent = (int) (percentage * 100);
-        Log.d("percent", Integer.toString(percent));
         percentageCorrect.setText(Integer.toString(percent) + "%");
 
         if (percent >= 90) {
@@ -241,6 +251,8 @@ public class touchQuestions extends AppCompatActivity {
         if (id == 16908332) {  // home button id
             //Intent intent = new Intent(this, MainMenu.class);
             //startActivity(intent);
+            // variableListener.Connect.setMyBoolean(false);
+            webview_touch.reload();
             finish();
             return true;
         }

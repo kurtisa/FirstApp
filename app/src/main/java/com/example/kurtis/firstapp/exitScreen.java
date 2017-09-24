@@ -1,6 +1,8 @@
 package com.example.kurtis.firstapp;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -9,6 +11,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -29,7 +33,7 @@ public class exitScreen extends AppCompatActivity {
     String accuracy;
     Boolean nextLevelUnlocked;
     int nextLevelNum;
-
+    Intent again;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,8 +52,16 @@ public class exitScreen extends AppCompatActivity {
         nextLevel.setVisibility(View.INVISIBLE);
 
 
-        final Intent again = new Intent(this, rhythmQuestions.class);
-        again.putExtra("LEVEL", level);
+        if (level.equals("1") || (level.equals("2"))) {
+            again = new Intent(this, rhythmQuestions.class);
+            again.putExtra("LEVEL", level);
+        } else if (level.equals("3") || (level.equals("5") || (level.equals("7")) || (level.equals("9")))) {
+            again = new Intent(this, MainActivity.class);
+            again.putExtra("LEVEL", level);
+        } else if (level.equals("4") || (level.equals("6") || (level.equals("8")) || (level.equals("10")))) {
+            again = new Intent(this, touchQuestions.class);
+            again.putExtra("LEVEL", level);
+        }
 
         retry.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,8 +113,12 @@ public class exitScreen extends AppCompatActivity {
         DatabaseReference levelRef = mRootRef.child("student_levels").child(username_string).child("level" + nextLevelNum);
         levelRef.addValueEventListener(new ValueEventListener() {
             public void onDataChange(DataSnapshot dataSnapshot) {
-                nextLevelUnlocked = dataSnapshot.getValue(Boolean.class);
-                displayMessage();
+                if (level.equals("10")) {
+                    nextLevelUnlocked = true;
+                } else {
+                    nextLevelUnlocked = dataSnapshot.getValue(Boolean.class);
+                    displayMessage();
+                }
             }
 
             public void onCancelled(DatabaseError databaseError) {
@@ -117,9 +133,14 @@ public class exitScreen extends AppCompatActivity {
         int accuracyInt = Integer.parseInt(accuracy);
         if ((accuracyInt < 90) && !nextLevelUnlocked) {
             message.setText("Try again! You need 90% accuracy to unlock the next level.");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                accuracyText.setTextColor(getColor(R.color.colorOrangePrimary));
+            }
             message.setVisibility(View.VISIBLE);
         } else if ((accuracyInt >= 90) && !nextLevelUnlocked) {
-            message.setText("Well done! You have unlocked Level " + nextLevelNum);
+            accuracyText.setTextColor(Color.GREEN);
+
+            message.setText("Well done! You have unlocked Level " + nextLevelNum + "!");
             message.setVisibility(View.VISIBLE);
             unlockLevel(nextLevelNum);
         }
@@ -136,7 +157,30 @@ public class exitScreen extends AppCompatActivity {
                 }
             }
         });
+        if (nextLevelNum == 2) {
+            nextLevel.setBackground(getDrawable(R.drawable.restingman));
+        } else if (nextLevelNum == 3) {
+            nextLevel.setBackground(getDrawable(R.drawable.spaces_bird));
+        } else if (nextLevelNum == 4) {
+            nextLevel.setBackground(getDrawable(R.drawable.baby_bird));
+        } else if (nextLevelNum == 5) {
+            nextLevel.setBackground(getDrawable(R.drawable.lines_bird));
+        } else if (nextLevelNum == 6) {
+            nextLevel.setBackground(getDrawable(R.drawable.baby_bird));
+        } else if (nextLevelNum == 7) {
+            nextLevel.setBackground(getDrawable(R.drawable.spaces_bird));
+        } else if (nextLevelNum == 8) {
+            nextLevel.setBackground(getDrawable(R.drawable.baby_bird));
+        } else if (nextLevelNum == 9) {
+            nextLevel.setBackground(getDrawable(R.drawable.lines_bird));
+        } else if (nextLevelNum == 10) {
+            nextLevel.setBackground(getDrawable(R.drawable.baby_bird));
+        }
+        nextLevel.setVisibility(View.VISIBLE);
 
-
+        YoYo.with(Techniques.Shake)
+                .duration(1000)
+                .repeat(1)
+                .playOn(nextLevel);
     }
 }

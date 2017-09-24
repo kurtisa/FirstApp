@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,6 +34,8 @@ public class MainMenu extends AppCompatActivity {
     String age;
     DatabaseReference mRootRef;
     ArrayList<String> teacherlist = new ArrayList();
+    ArrayList<String> studentTasks = new ArrayList();
+
     Boolean alertBool = true;
     ImageButton noteRhythm;
     ImageButton restRhythm;
@@ -44,15 +47,15 @@ public class MainMenu extends AppCompatActivity {
     ImageButton gbdfaLearn;
     ImageButton acegTouch;
     ImageButton gbdfaTouch;
-    Boolean restRhythmLock;
-    Boolean faceLearnLock;
-    Boolean faceTouchLock;
-    Boolean egbdfLearnLock;
-    Boolean egbdfTouchLock;
-    Boolean acegLearnLock;
-    Boolean acegTouchLock;
-    Boolean gbdfaLearnLock;
-    Boolean gbdfaTouchLock;
+    Boolean restRhythmLock = true;
+    Boolean faceLearnLock = true;
+    Boolean faceTouchLock = true;
+    Boolean egbdfLearnLock = true;
+    Boolean egbdfTouchLock = true;
+    Boolean acegLearnLock = true;
+    Boolean acegTouchLock = true;
+    Boolean gbdfaLearnLock = true;
+    Boolean gbdfaTouchLock = true;
     private Intent intent;
     private Menu menu;
     private Intent login_intent;
@@ -96,7 +99,6 @@ public class MainMenu extends AppCompatActivity {
                 noteRhythmIntent.putExtra("LEVEL", "1");
                 startActivity(noteRhythmIntent);
             }
-
         });
         final Intent restIntent = new Intent(this, rhythmQuestions.class);
 
@@ -129,6 +131,7 @@ public class MainMenu extends AppCompatActivity {
                 if (faceTouchLock) {
                     faceTouchIntent.putExtra("LEVEL", "4");
                     startActivity(faceTouchIntent);
+                    variableListener.Connect.setMyBoolean(false);
                 }
             }
 
@@ -150,6 +153,7 @@ public class MainMenu extends AppCompatActivity {
         egbdfTouch.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v2) {
                 if (egbdfTouchLock) {
+                    variableListener.Connect.setMyBoolean(false);
                     egbdfTouchIntent.putExtra("LEVEL", "6");
                     startActivity(egbdfTouchIntent);
                 }
@@ -160,7 +164,7 @@ public class MainMenu extends AppCompatActivity {
         gbdfaLearn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v2) {
                 if (gbdfaLearnLock) {
-                    gbdfaLearnIntent.putExtra("LEVEL", "7");
+                    gbdfaLearnIntent.putExtra("LEVEL", "9");
                     startActivity(gbdfaLearnIntent);
                 }
             }
@@ -170,7 +174,8 @@ public class MainMenu extends AppCompatActivity {
         gbdfaTouch.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v2) {
                 if (gbdfaTouchLock) {
-                    gbdfaTouchIntent.putExtra("LEVEL", "8");
+                    variableListener.Connect.setMyBoolean(false);
+                    gbdfaTouchIntent.putExtra("LEVEL", "10");
                     startActivity(gbdfaTouchIntent);
                 }
             }
@@ -180,7 +185,7 @@ public class MainMenu extends AppCompatActivity {
         acegLearn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v2) {
                 if (acegLearnLock) {
-                    acegLearnIntent.putExtra("LEVEL", "9");
+                    acegLearnIntent.putExtra("LEVEL", "7");
                     startActivity(acegLearnIntent);
                 }
             }
@@ -191,7 +196,7 @@ public class MainMenu extends AppCompatActivity {
         acegTouch.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v2) {
                 if (acegTouchLock) {
-                    acegTouchIntent.putExtra("LEVEL", "10");
+                    acegTouchIntent.putExtra("LEVEL", "8");
                     startActivity(acegTouchIntent);
                 }
             }
@@ -230,6 +235,8 @@ public class MainMenu extends AppCompatActivity {
 
         DatabaseReference levelRef = mRootRef.child("student_levels").child(username_string);
         final DatabaseReference studentList = mRootRef.child("student-list").child(username_string);
+        final DatabaseReference taskList = mRootRef.child("student-tasks").child(username_string).child("exhibitionteacher");
+
         // Check if student's teacher list has changed
         studentList.addValueEventListener(new ValueEventListener() {
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -252,10 +259,45 @@ public class MainMenu extends AppCompatActivity {
             }
         });
 
+        taskList.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+
+                    // String leveltodo = childDataSnapshot.getValue(String.class);
+                    //String completeInt = childDataSnapshot.child("Complete level").getKey();
+                    //String unlockLev = childDataSnapshot.child("Unlock level").getValue(String.class);
+                    //String due = childDataSnapshot.child("Due Date").getKey();
+                    //trigger_task_list(leveltodo, completeInt, unlockLev, due);
+
+                }
+            }
+
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         levelRef.addValueEventListener(new ValueEventListener() {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                    // if the student's list of teachers does not contain the teacher, or the teacher username value is false (student hasn't accepted request
                     unlockLevels(childDataSnapshot.getKey(), childDataSnapshot.getValue(Boolean.class));
                 }
             }
@@ -352,14 +394,14 @@ public class MainMenu extends AppCompatActivity {
         }
     }
 
-    private void trigger_task_list() {
+    private void trigger_task_list(String level, String complete, String unlock, String due) {
         final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("teachertest3 set you new tasks!");
+        alert.setTitle("Exhibitionteacher set you new tasks!");
 
         TextView task1 = new TextView(this);
         alert.setView(task1);
         task1.setPaddingRelative(2, 2, 10, 2);
-        task1.setText("           Unlock Bass Clef Writing 1 by 21/09/2017");
+        task1.setText("Complete " + level + " by " + complete);
         task1.setTextSize(14);
 
         alert.setPositiveButton("View", new DialogInterface.OnClickListener() {

@@ -121,7 +121,6 @@
                         android:layout_width="105dp"
                         android:layout_height="105dp"
                         android:layout_gravity="center"
-
                         android:background="@drawable/baby_bird" />
 
                     <TextView
@@ -169,7 +168,7 @@
                     android:orientation="vertical">
 
                     <ImageButton
-                        android:id="@+id/gbdfaTouch"
+                        android:id="@+id/egbdfTouch"
                         android:layout_width="105dp"
                         android:layout_height="105dp"
                         android:layout_gravity="center"
@@ -272,7 +271,7 @@
                     android:orientation="vertical">
 
                     <ImageButton
-                        android:id="@+id/egbdfTouch"
+                        android:id="@+id/gbdfaTouch"
                         android:layout_width="match_parent"
                         android:layout_height="105dp"
                         android:layout_gravity="center"

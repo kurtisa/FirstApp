@@ -99,7 +99,7 @@ else if (level == '9'){
          	case 3:	noteLetter = "F";
          	pitch = "/3";
            				break;
-            case 3:	noteLetter = "A";
+            case 4:	noteLetter = "A";
             pitch = "/3";
                         break;
          	}

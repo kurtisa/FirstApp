@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         }
         level = getIntent().getStringExtra("LEVEL");
 
-        if ((Objects.equals(level, "3") | Objects.equals(level, "2"))) {
+        if ((Objects.equals(level, "3") | Objects.equals(level, "5"))) {
             trebleClef = true;
             Log.d("IF STATEMENT", "trebleClef set to true");
         } else {
@@ -107,6 +107,8 @@ public class MainActivity extends AppCompatActivity {
         //enable jse
 
         WebSettings webSettings = wv1.getSettings();
+        wv1.setVerticalScrollBarEnabled(false);
+        wv1.setHorizontalScrollBarEnabled(false);
         webSettings.setJavaScriptEnabled(true);
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setDefaultTextEncodingName("utf-8");
@@ -194,7 +196,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void wrongAnswer(Button button) {
-
         YoYo.with(Techniques.Wave)
                 .duration(300)
                 .repeat(1)

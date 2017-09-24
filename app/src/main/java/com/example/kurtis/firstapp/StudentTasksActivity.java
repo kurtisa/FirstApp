@@ -50,11 +50,11 @@ public class StudentTasksActivity extends AppCompatActivity {
         listDataChild = new HashMap<String, List<String>>();
 
         // Adding child data
-        listDataHeader.add("Uncompleted Assignments");
+        listDataHeader.add("Assignments");
 
         // Adding child data
         List<String> student123 = new ArrayList<String>();
-        student123.add(" Unlock Bass Clef Writing 1 by 21/09/2017");
+        student123.add("Unlock Bass Clef Writing 1 by 29/09/2017");
 
         listDataChild.put(listDataHeader.get(0), student123); // Header, Child data
     }

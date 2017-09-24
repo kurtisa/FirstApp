@@ -122,7 +122,6 @@ public class setTasksActivity extends AppCompatActivity implements AdapterView.O
         });
 
         setDueDateButton = (Button) findViewById(R.id.selectDueDate);
-
         setDueDateButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v2) {
                 showTimePickerDialog(v2);
